@@ -416,11 +416,13 @@ int main(int argc, char **argv)
       }
     }
 
-    L("Initializing grabber method...\n");
+    L("===========Initializing grabber method...\n");
     initGrabberMethod();
+    L("=========end\n");
 
-    L("Initializing virtual keyboard and touch device...\n");
+    L("=========Initializing virtual keyboard and touch device...\n");
     initInput(); 
+    L("=========end\n");
 
     L("Initializing VNC server:\n");
     L("	width:  %d\n", (int)screenformat.width);
@@ -437,7 +439,7 @@ int main(int argc, char **argv)
     bindIPCserver();
     sendServerStarted();
 
-    if (rhost) {
+    if (rhost) {// for reverse connection
       rfbClientPtr cl;
       cl = rfbReverseConnection(vncscr, rhost, rport);
       if (cl == NULL) {

@@ -36,6 +36,7 @@ char* UINPUT_FILEPATHS[] = {
 int suinput_write(int uinput_fd,
                   uint16_t type, uint16_t code, int32_t value)
 {
+    L("GET_EVENT--suinput_write---%d, %d, %d \n", type, code, value);
     struct input_event event;
     memset(&event, 0, sizeof(event));
     gettimeofday(&event.time, 0); /* This should not be able to fail ever.. */
@@ -50,6 +51,7 @@ int suinput_write(int uinput_fd,
 int suinput_write_syn(int uinput_fd,
                              uint16_t type, uint16_t code, int32_t value)
 {
+    L("GET_EVENT--suinput_write_syn---%d, %d, %d \n", type, code, value);
     if (suinput_write(uinput_fd, type, code, value))
         return -1;
     return suinput_write(uinput_fd, EV_SYN, SYN_REPORT, 0);
@@ -57,14 +59,16 @@ int suinput_write_syn(int uinput_fd,
 
 int suinput_open(const char* device_name, const struct input_id* id)
 {
+    L("---suinput_open...---\n");
     int original_errno = 0;
     int uinput_fd = -1;
     struct uinput_user_dev user_dev;
     int i;
 
     for (i = 0; i < UINPUT_FILEPATHS_COUNT; ++i) {
+        //open input device file...1
         uinput_fd = open(UINPUT_FILEPATHS[i], O_WRONLY | O_NONBLOCK);
-        if (uinput_fd != -1)
+        if (uinput_fd != -1)//check if open failed!....
             break;
     }
 
@@ -113,10 +117,13 @@ int suinput_open(const char* device_name, const struct input_id* id)
     
 
     /* Configure device to handle all keys, see linux/input.h. */
+    
     for (i = 0; i < KEY_MAX; i++) {
         if (ioctl(uinput_fd, UI_SET_KEYBIT, i) == -1)
             goto err;
     }
+    
+    //ioctl(uinput_fd, UI_SET_KEYBIT, BTN_MOUSE);
 
     /* Set device-specific information. */
     memset(&user_dev, 0, sizeof(user_dev));
@@ -209,12 +216,14 @@ int suinput_set_pointer(int uinput_fd, int32_t x, int32_t y)
 
 int suinput_press(int uinput_fd, uint16_t code)
 {
-    return suinput_write(uinput_fd, EV_KEY, code, 1);
+    L("KEY_EVENT--suinput_press--code:%d \n");
+    return suinput_write_syn(uinput_fd, EV_KEY, code, 1);//modified for KeyEvent MQ
 }
 
 int suinput_release(int uinput_fd, uint16_t code)
 {
-    return suinput_write(uinput_fd, EV_KEY, code, 0);
+    L("KEY_EVENT--suinput_release--code:%d \n");
+    return suinput_write_syn(uinput_fd, EV_KEY, code, 0);//modified for KeyEvent MQ
 }
 
 int suinput_click(int uinput_fd, uint16_t code)

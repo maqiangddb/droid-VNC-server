@@ -21,6 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define SUINPUT_H
 #include <stdint.h>
 
+//added for LOG MQ
+#include <gui.h>
+
 #include <linux/input.h>
 #include <linux/uinput.h>
 
