@@ -88,7 +88,18 @@ void setIdle(int i)
 
 ClientGoneHookPtr clientGone(rfbClientPtr cl)
 {
-  sendMsgToGui("~DISCONNECTED|\n");
+  //sendMsgToGui("~DISCONNECTED|\n");
+  L("clientGone==~DISCONNECTED|=host:%s \n", cl->host);
+  
+  char *header="~DISCONNECTED|";// add host msg
+  char *msg=malloc(sizeof(char)*((strlen(cl->host)) + strlen(header)+2));
+  msg[0]='\0';
+  strcat(msg,header);
+  strcat(msg,cl->host);
+  strcat(msg,"\n");
+  sendMsgToGui(msg);
+  free (msg);
+  
   return 0;
 }
 

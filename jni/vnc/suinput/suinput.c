@@ -51,7 +51,7 @@ int suinput_write(int uinput_fd,
 int suinput_write_syn(int uinput_fd,
                              uint16_t type, uint16_t code, int32_t value)
 {
-    L("GET_EVENT--suinput_write_syn---%d, %d, %d \n", type, code, value);
+    //L("GET_EVENT--suinput_write_syn---%d, %d, %d \n", type, code, value);
     if (suinput_write(uinput_fd, type, code, value))
         return -1;
     return suinput_write(uinput_fd, EV_SYN, SYN_REPORT, 0);

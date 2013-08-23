@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="VNC Server settings" >
+    <PreferenceCategory android:title="@string/server_settings" >
         <EditTextPreference
             android:key="password"
             android:password="true"
-            android:summary="Protect your VNC connection"
-            android:title="VNC password" >
+            android:summary="@string/password_summary"
+            android:title="@string/password_title" >
         </EditTextPreference>
         <EditTextPreference
             android:defaultValue="5901"
             android:inputType="number"
             android:key="port"
-            android:summary="Note: It will not show error if cannot bind port"
-            android:title="VNC port" >
+            android:summary="@string/port_summary"
+            android:title="@string/port_title" >
         </EditTextPreference>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="startdaemononboot"
-            android:summaryOff="Warning! Just activate if you have your daemon running fine."
-            android:summaryOn="Warning! Just activate if you have your daemon running fine."
-            android:title="Start server on boot" >
+            android:summaryOff="@string/boot_summary"
+            android:summaryOn="@string/boot_summary"
+            android:title="@string/boot_title" >
         </CheckBoxPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Display settings" >
+    <PreferenceCategory android:title="@string/display_settings" >
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="180"
             android:entries="@array/rotation_strings"
             android:entryValues="@array/rotation_values"
             android:key="rotation"
-            android:summary="Rotate screen if you like"
-            android:title="Rotation" >
+            android:summary="@string/rotate_summary"
+            android:title="@string/rotate_title" >
         </ListPreference>
         <ListPreference
             android:defaultValue="100"
             android:entries="@array/scale_strings"
             android:entryValues="@array/scale_values"
             android:key="scale"
-            android:summary="Only 100 and 50 working for now"
-            android:title="Scale Screen" >
+            android:summary="@string/scale_summary"
+            android:title="@string/scale_title" >
         </ListPreference>
 
         <CheckBoxPreference
@@ -54,35 +54,32 @@
             android:entries="@array/display_mode_strings"
             android:entryValues="@array/display_mode_values"
             android:key="displaymode"
-            android:summary="Change if you are experiencing display issues"
-            android:title="Display Access Method" >
+            android:summary="@string/display_summary"
+            android:title="@string/display_title" >
         </ListPreference>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="screenturnoff"
-            android:title="Don&apos;t Let Screen Turn off" >
+            android:title="@string/screen_title" >
         </CheckBoxPreference>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifyclient"
-            android:summary="Show notification on status bar"
-            android:title="Notify When Client Connects" >
+            android:summary="@string/notify_summary"
+            android:title="@string/notify_title" >
         </CheckBoxPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Misc Settings" >
+    <PreferenceCategory android:title="@string/misc_title" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="asroot"
-            android:summary="Unselect this if you do not want to run the server as root."
-            android:title="Execute server as root" >
-        </CheckBoxPreference>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="hidead"
-            android:summary="Select this if you don&apos;t want to view the ad."
-            android:title="Disable Bottom Ad" >
+            android:summary="@string/root_summary"
+            android:title="@string/root_title" >
         </CheckBoxPreference>
     </PreferenceCategory>
+    <Preference android:title="Work Now"
+                android:key="work_now"
+                />
 
 </PreferenceScreen>

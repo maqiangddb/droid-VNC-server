@@ -28,12 +28,12 @@
             </intent-filter>
         </activity>   
         <activity 
-            android:name="preferences"
+            android:name=".VncSettings"
             android:label="Preferences" >
         </activity>
-        <activity
+        <!--activity
             android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" /-->
 
         <service android:name=".ServerManager" >
             <intent-filter>
@@ -42,16 +42,38 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".StartServiceAtBootReceiver" >
+        <receiver android:name=".VncServerReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
+            <intent-filter >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="com.samkoon.vnc.START" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="com.samkoon.vnc.STOP" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="com.samkoon.vnc.STATE_CHANGE" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="com.samkoon.vnc.CONNECT_CHANGE" />
+            </intent-filter>
         </receiver>
 
-        <service android:name="avncservice" >
-        </service>
+        <!--service android:name="avncservice" >
+        </service-->
+
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" >

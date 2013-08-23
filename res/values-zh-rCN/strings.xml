@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_settings">VNC服务设置</string>
+    <string name="password_summary">保护您的VNC连接</string>
+    <string name="password_title">VNC密码设置</string>
+    <string name="port_summary">提示：如果不能绑定这个接口会提示错误</string>
+    <string name="port_title">VNC接口设置</string>
+    <string name="boot_summary">开机马上启动VNC服务。</string>
+    <string name="boot_title">开机启动设置</string>
+    <string name="display_settings">显示设置</string>
+    <string name="rotate_summary">选择旋转值</string>
+    <string name="rotate_title">显示旋转设置</string>
+    <string name="scale_summary">只支持100到50的放大缩小值</string>
+    <string name="scale_title">缩放设置</string>
+    <string name="display_summary">选择你想要的方式</string>
+    <string name="display_title">获取显示方式设置</string>
+    <string name="screen_title">服务启动后不关屏</string>
+    <string name="notify_summary">在通知栏显示连接通知</string>
+    <string name="notify_title">连接通知设置</string>
+    <string name="misc_title">其他设置</string>
+    <string name="root_summary">如果您不想作为超级用户运行此服务，请不要选择。</string>
+    <string name="root_title">作为超级用户运行服务</string>
+    <string name="btn_settings">设置</string>
+    <string name="already_running">服务已经运行!</string>
+    <string name="restart_server">重启服务?</string>
+    <string name="yes">是</string>
+    <string name="cancel">取消</string>
+    <string name="cannot_continue">无法继续</string>
+    <string name="no_root_msg">"您的设备没有root权限\n请先root您的设备!\n\n是否继续?"
+    </string>
+    <string name="no">否</string>
+    <string name="about">关于</string>
+    <string name="settings_hint">设置后不要忘了重启服务</string>
+    <string name="running">运行中。。。</string>
+    <string name="stopped">停止</string>
+    <string name="usb_connect_msg">"您可以通过USB连接:"</string>
+    <string name="or">"或者"</string>
+    <string name="adb_hint">"(use adb to forward ports)"</string>
+    <string name="connect_to">"连接到:"</string>
+    <string name="could_not_start_server">"无法启动服务 :("</string>
+    <string name="could_not_stop_server">"无法停止服务 :("</string>
+    <string name="close">关闭</string>
+</resources>

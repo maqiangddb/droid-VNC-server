@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/preferences" android:title="Settings"></item>
+    <item android:id="@+id/preferences" android:title="Settings" android:showAsAction="ifRoom"/>
+    <item android:id="@+id/log" android:title="Report issue" android:showAsAction="ifRoom"/>
+    <item android:id="@+id/about" android:title="About" android:showAsAction="ifRoom"/>
+    <item android:id="@+id/help" android:title="Help" android:showAsAction="ifRoom"/>
+    <item android:id="@+id/reverse" android:title="Reverse Connection" android:showAsAction="ifRoom"/>
+    <item android:id="@+id/close" android:title="Close" android:showAsAction="ifRoom"/>
 </menu>

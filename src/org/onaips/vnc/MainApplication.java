@@ -1,18 +1,17 @@
 package org.onaips.vnc;
 
+import android.app.Application;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class MainApplication extends Application {
 
@@ -26,8 +25,8 @@ public class MainApplication extends Application {
 	}    
  
 	public void log(String s)
-	{ 
-		Log.v(MainActivity.VNC_LOG,s); 
+	{
+		Log.v(MainActivity.VNC_LOG,s);
 	}
 
 	public boolean firstRun()
@@ -73,6 +72,9 @@ public class MainApplication extends Application {
 		
 	}
 
+    /* copy raw file to file path
+    *
+     */
 	public void copyBinary(int id,String path)
 	{
 		log("copy -> " + path);

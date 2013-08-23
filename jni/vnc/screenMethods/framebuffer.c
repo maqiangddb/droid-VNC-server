@@ -114,6 +114,7 @@ int initFB(void)
 
 void closeFB(void) 
 {
+  L("--closeFB--\n");
   if(fbfd != -1)
   close(fbfd);
 } 

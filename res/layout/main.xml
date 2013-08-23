@@ -20,6 +20,19 @@
             android:layout_marginTop="24dp"
             android:scaleType="fitStart"
             android:src="@drawable/droidvnclogo" />
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+            <Button android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/settings_btn"
+                    android:text="@string/btn_settings" />
+            <Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/close"
+                    android:text="@string/close" />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
@@ -28,7 +41,7 @@
             android:layout_marginTop="10dp" >
 
             <Button
-                android:id="@+id/Button01"
+                android:id="@+id/start"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
@@ -36,11 +49,11 @@
             </Button>
 
             <Button
-                android:id="@+id/Button02"
+                android:id="@+id/restart"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/Button01"
+                android:layout_toRightOf="@id/start"
                 android:background="@drawable/restart_normal" >
             </Button>
         </RelativeLayout>
@@ -53,12 +66,12 @@
             android:shadowColor="#111"
             android:shadowDy="1.0"
             android:shadowRadius="0.5"
-            android:text="@+id/TextView01"
+            android:text="@+id/stateLabel"
             android:textSize="30sp" >
         </TextView>
 
         <TextView
-            android:id="@+id/TextView01"
+            android:id="@+id/connect_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -66,18 +79,18 @@
             android:shadowColor="#111"
             android:shadowDy="1.0"
             android:shadowRadius="0.5"
-            android:text="@+id/TextView02"
+            android:text="@+id/connect_msg"
             android:textSize="15sp" >
         </TextView>
     </LinearLayout>
  
-  <com.google.ads.AdView
+  <!--com.google.ads.AdView
       android:id="@+id/adView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       ads:adSize="BANNER"
       ads:adUnitId="a14c45a1d8a1817"
-      android:gravity="center_horizontal" />
+      android:gravity="center_horizontal" /-->
 
 </RelativeLayout>

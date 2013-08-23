@@ -105,6 +105,7 @@ screenFormat getScreenFormatFlinger(void)
 
 void closeFlinger(void)
 {
+  L("--closeFlinger--\n");
   if (close_flinger)
     close_flinger();
   if (flinger_lib)

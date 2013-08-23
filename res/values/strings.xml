@@ -60,5 +60,47 @@ Firmware version: <xliff:g id="firmware_revision">%s</xliff:g>\n
 Kernel version: <xliff:g id="kernel_version">%s</xliff:g>\n
 Build number: <xliff:g id="build_number">%s</xliff:g>\n
 CPU ABI: <xliff:g id="cpu_abi">%s</xliff:g>\n
-</string>       
+</string>
+    <string name="server_settings">VNC Server settings</string>
+    <string name="password_summary">Protect your VNC connection</string>
+    <string name="password_title">VNC password</string>
+    <string name="port_summary">Note: It will not show error if cannot bind port</string>
+    <string name="port_title">VNC port</string>
+    <string name="boot_summary">Warning! Just activate if you have your daemon running fine.</string>
+    <string name="boot_title">Start server on boot</string>
+    <string name="display_settings">Display settings</string>
+    <string name="rotate_summary">Rotate screen if you like</string>
+    <string name="rotate_title">Rotation</string>
+    <string name="scale_summary">Only 100 and 50 working for now</string>
+    <string name="scale_title">Scale Screen</string>
+    <string name="display_summary">Change if you are experiencing display issues</string>
+    <string name="display_title">Display Access Method</string>
+    <string name="screen_title">"Don&apos;t Let Screen Turn off"</string>
+    <string name="notify_summary">Show notification on status bar</string>
+    <string name="notify_title">Notify When Client Connects</string>
+    <string name="misc_title">Misc Settings</string>
+    <string name="root_summary">Unselect this if you do not want to run the server as root.</string>
+    <string name="root_title">Execute server as root</string>
+    <string name="btn_settings">Settings</string>
+    <string name="already_running">Already running!</string>
+    <string name="restart_server">Restart server?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="cannot_continue">Cannot continue</string>
+    <string name="no_root_msg">\"You do not have root permissions.\nPlease root your phone
+        first!\n\nDo you want to continue anyway?\"
+    </string>
+    <string name="no">No</string>
+    <string name="about">"About"</string>
+    <string name="settings_hint">"Don't forget to stop/start the server after changes"</string>
+    <string name="running">Running</string>
+    <string name="stopped">Stopped</string>
+    <string name="usb_connect_msg">" You can connect through USB with:"</string>
+    <string name="or">"or"</string>
+    <string name="adb_hint">"(use adb to forward ports)"</string>
+    <string name="connect_to">"Connect to:"</string>
+    <string name="could_not_start_server">"Could not start server :("</string>
+    <string name="could_not_stop_server">"Could not stop server :("</string>
+    <string name="close">Close</string>
+
 </resources>

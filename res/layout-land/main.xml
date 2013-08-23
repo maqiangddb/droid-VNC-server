@@ -15,6 +15,8 @@
         android:layout_centerVertical="true"
         android:orientation="horizontal" >
 
+        <ScrollView android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" >
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
@@ -25,8 +27,22 @@
             <ImageView
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/droidvnclogo" >
-            </ImageView>
+                android:src="@drawable/droidvnclogo"
+                android:visibility="invisible"
+             />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <Button android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/settings_btn"
+                        android:text="@string/btn_settings" />
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/close"
+                        android:text="@string/close" />
+                </LinearLayout>
 
             <TextView
                 android:id="@+id/stateLabel"
@@ -34,13 +50,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingTop="10dp"
-                android:text="@+id/TextView01"
+                android:text="@+id/stateLabel"
                 android:textSize="30sp"
                 android:typeface="sans" >
             </TextView>
 
             <TextView
-                android:id="@+id/TextView01"
+                android:id="@+id/connect_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -49,11 +65,12 @@
                 android:shadowColor="#111"
                 android:shadowDy="1.0"
                 android:shadowRadius="0.5"
-                android:text="@+id/TextView02"
+                android:text="@+id/connect_msg"
                 android:textSize="15sp"
                 android:typeface="sans" >
             </TextView>
         </LinearLayout>
+        </ScrollView>
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
@@ -64,7 +81,7 @@
             android:layout_gravity="center" >
 
             <Button
-                android:id="@+id/Button01"
+                android:id="@+id/start"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_centerInParent="true"
@@ -72,23 +89,23 @@
             </Button>
 
             <Button
-                android:id="@+id/Button02"
+                android:id="@+id/restart"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/Button01"
+                android:layout_toRightOf="@id/start"
                 android:background="@drawable/restart_normal" >
             </Button>
         </RelativeLayout>
     </LinearLayout>
 
-    <com.google.ads.AdView
+    <!--com.google.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="BANNER"
-        ads:adUnitId="a14c45a1d8a1817" />
+        ads:adUnitId="a14c45a1d8a1817" /-->
 
 </RelativeLayout>

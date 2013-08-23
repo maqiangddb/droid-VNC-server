@@ -100,6 +100,7 @@ screenFormat getScreenFormatGralloc(void)
 
 void closeGralloc(void)
 {
+  L("--closeGralloc--\n");
   if (close_gralloc)
     close_gralloc();
   if (gralloc_lib)
