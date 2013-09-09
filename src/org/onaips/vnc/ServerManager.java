@@ -8,6 +8,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +32,8 @@ import java.net.InetAddress;
 
 public class ServerManager extends Service {
 
-	SharedPreferences _preferencesManager;
+    private static final boolean ENG = false;
+    SharedPreferences _preferencesManager;
 	private static PowerManager.WakeLock wakeLock = null;
 
 	boolean serverOn = false;
@@ -60,6 +64,7 @@ public class ServerManager extends Service {
 
         _uiHandler = new Handler(Looper.getMainLooper());
         _preferencesManager = PreferenceManager.getDefaultSharedPreferences(this);
+        copyWebClientFile();
 
 		if (_svnListener != null) {
 			log("_svnListener was already active!");
@@ -74,6 +79,7 @@ public class ServerManager extends Service {
 	//for pre-2.0 devices
 	@Override
 	public void onStart(Intent intent, int startId) {
+        log("========onStart");
         handStartIntent(intent);
 	}
 
@@ -91,25 +97,59 @@ public class ServerManager extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+        log("========onStartCommand");
         handStartIntent(intent);
 		return START_NOT_STICKY;
 	}
 
+    private void copyWebClientFile() {
+
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                return null;
+            }
+        };
+        MainApplication.createBinaries(this);
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     private void handStartIntent(Intent intent) {
         log("onHandleIntent==intent:"+intent);
-        if (intent.hasExtra(VncServerReceiver.EXTRA_SETTINGS_DATA)) {
-            Bundle settings = intent.getBundleExtra(VncServerReceiver.EXTRA_SETTINGS_DATA);
+        String action = intent.getAction();
+        if (action == null) {
+            return;
+        }
+        if (action.equals(VncServerReceiver.START_VNC_ACTION)) {
+        Bundle settings = intent.getBundleExtra(VncServerReceiver.EXTRA_SETTINGS_DATA);
+        if (settings != null) {
+            log("have settings===");
             String password = settings.getString(VncServerReceiver.KEY_PASSWORD, "");
-            String port = settings.getString(VncServerReceiver.KEY_PORT, "5901");
+            String port = settings.getString(VncServerReceiver.KEY_PORT, "843");
             String rotate = settings.getString(VncServerReceiver.KEY_ROTATION, "0");
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             saveSettings(preferences, password, port, rotate);
         }
         startServer();
+        } else if (action.equals(VncServerReceiver.REQUST_STATE_ACTION)) {
+
+            int state = VncServerReceiver.STATE_STOPED;
+            if (isServerRunning()) {
+                state = VncServerReceiver.STATE_STARTED;
+            }
+            checkNetworkConnect();
+            sendStateIntent(state);
+        }
+    }
+
+    private void checkNetworkConnect() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        log("checkNetworkConnect===active info:"+info);
     }
 
     private void saveSettings(SharedPreferences preferences, String password, String port, String rotate) {
+        log("saveSettings==password:"+password+"=port:"+port+"==rotate:"+rotate);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(VncSettings.KEY_PASSWORD, password);
         editor.putString(VncSettings.KEY_PORT, port);
@@ -128,7 +168,7 @@ public class ServerManager extends Service {
 			if (!password.equals(""))
 				password_check = "-p " + password;
 
-			String rotation = _preferencesManager.getString(VncSettings.KEY_ROTATION, "0");
+			String rotation = _preferencesManager.getString(VncSettings.KEY_ROTATION, "180");
 			if (!rotation.equals(""))
 				rotation = "-r " + rotation;
 
@@ -138,12 +178,12 @@ public class ServerManager extends Service {
 			if (!scaling.equals(""))
 				scaling_string = "-s " + scaling;
 
-			String port = _preferencesManager.getString(VncSettings.KEY_PORT, "5901");
+			String port = _preferencesManager.getString(VncSettings.KEY_PORT, "843");
 			try {
 				int port1 = Integer.parseInt(port);
 				port = String.valueOf(port1);
 			} catch (NumberFormatException e) {
-				port = "5901";
+				port = "843";
 			}
 			String port_string = "";
 			if (!port.equals(""))
@@ -178,7 +218,9 @@ public class ServerManager extends Service {
 			String permission_string="chmod 777 " + droidvncserver_exec;
 			String server_string= droidvncserver_exec  + " " + password_check + " " + rotation+ " " + scaling_string + " " + port_string + " "
 			+ reverse_string + " " + display_method ;
- 
+
+            log("====exec:"+server_string);
+
 			boolean root=_preferencesManager.getBoolean(VncSettings.KEY_AROOT,true);
             log("MainActivity has Root permission:"+MainActivity.hasRootPermission());
 			root &= MainActivity.hasRootPermission();
@@ -201,7 +243,7 @@ public class ServerManager extends Service {
 				Runtime.getRuntime().exec(server_string,null,new File(files_dir));
 			}
 			// dont show password on logcat
-			log("Starting " + droidvncserver_exec  + " " + rotation+ " " + scaling_string + " " + port_string + " "
+			log("Starting " + droidvncserver_exec + "password:" + !password_check.equals("")  + " " + rotation+ " " + scaling_string + " " + port_string + " "
 					+ reverse_string + " " + display_method + " ");
 
 		} catch (IOException e) {
@@ -252,7 +294,7 @@ public class ServerManager extends Service {
 
         Intent intent = new Intent(VncServerReceiver.VNC_STATE_CHANGE_ACTION);
         intent.putExtra(VncServerReceiver.EXTRA_STATE, state);
-        log(">>>>>>send intent:"+intent);
+        log(">>>>>>send intent:" + intent);
         sendBroadcast(intent);
     }
 
@@ -308,6 +350,9 @@ public class ServerManager extends Service {
     }
 
     public void showTextOnScreen(final String t) {
+        if (!ENG) {
+            return;
+        }
         _uiHandler.post(new Runnable() {
 
             public void run() {
@@ -364,7 +409,9 @@ public class ServerManager extends Service {
 		@Override
 		public void run() {
 			try {
-				server = new DatagramSocket(13131);
+                if (server == null) {
+				    server = new DatagramSocket(13131);
+                }
 				log("Listening...");
 
 				while (!finished) {

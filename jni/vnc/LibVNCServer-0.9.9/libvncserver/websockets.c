@@ -31,6 +31,9 @@
 /* errno */
 #include <errno.h>
 
+ //added for LOG MQ
+#include <gui.h>
+
 #include <byteswap.h>
 #include <string.h>
 #include "rfbconfig.h"
@@ -139,7 +142,7 @@ Sec-WebSocket-Protocol: %s\r\n\
 \r\n"
 
 
-#define WEBSOCKETS_CLIENT_CONNECT_WAIT_MS 100
+#define WEBSOCKETS_CLIENT_CONNECT_WAIT_MS 1000
 #define WEBSOCKETS_CLIENT_SEND_WAIT_MS 100
 #define WEBSOCKETS_MAX_HANDSHAKE_LEN 4096
 
@@ -190,8 +193,10 @@ webSocketsCheck (rfbClientPtr cl)
 
     ret = rfbPeekExactTimeout(cl, bbuf, 4,
                                    WEBSOCKETS_CLIENT_CONNECT_WAIT_MS);
+    L("rfbPeekExactTimeout==ret:%d bbuf: %s \n", ret, bbuf);
     if ((ret < 0) && (errno == ETIMEDOUT)) {
       rfbLog("Normal socket connection\n");
+      L("Normal socket connection \n");
       return TRUE;
     } else if (ret <= 0) {
       rfbErr("webSocketsHandshake: unknown connection error\n");
@@ -200,6 +205,7 @@ webSocketsCheck (rfbClientPtr cl)
 
     if (strncmp(bbuf, "<", 1) == 0) {
         rfbLog("Got Flash policy request, sending response\n");
+        L("Got Flash policy request, sending response\n");
         if (rfbWriteExact(cl, FLASH_POLICY_RESPONSE,
                           SZ_FLASH_POLICY_RESPONSE) < 0) {
             rfbErr("webSocketsHandshake: failed sending Flash policy response");
@@ -207,6 +213,7 @@ webSocketsCheck (rfbClientPtr cl)
         return FALSE;
     } else if (strncmp(bbuf, "\x16", 1) == 0 || strncmp(bbuf, "\x80", 1) == 0) {
         rfbLog("Got TLS/SSL WebSockets connection\n");
+        L("Got TLS/SSL WebSockets connection\n");
         if (-1 == rfbssl_init(cl)) {
 	  rfbErr("webSocketsHandshake: rfbssl_init failed\n");
 	  return FALSE;
@@ -223,8 +230,10 @@ webSocketsCheck (rfbClientPtr cl)
     }
 
     rfbLog("Got '%s' WebSockets handshake\n", scheme);
+    L("Got '%s' WebSockets handshake\n", scheme);
 
     if (!webSocketsHandshake(cl, scheme)) {
+        L("webSocketsHandshake failed!!! \n");
         return FALSE;
     }
     /* Start WebSockets framing */
@@ -247,12 +256,14 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
     buf = (char *) malloc(WEBSOCKETS_MAX_HANDSHAKE_LEN);
     if (!buf) {
         rfbLogPerror("webSocketsHandshake: malloc");
+        L("=====failed==1 \n");
         return FALSE;
     }
     response = (char *) malloc(WEBSOCKETS_MAX_HANDSHAKE_LEN);
     if (!response) {
         free(buf);
         rfbLogPerror("webSocketsHandshake: malloc");
+        L("=====failed==2 \n");
         return FALSE;
     }
 
@@ -262,12 +273,14 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
             if ((n < 0) && (errno == ETIMEDOUT)) {
                 break;
             }
-            if (n == 0)
+            if (n == 0) {
                 rfbLog("webSocketsHandshake: client gone\n");
-            else
+                L("webSocketsHandshake: client gone\n");
+            } else
                 rfbLogPerror("webSocketsHandshake: read");
             free(response);
             free(buf);
+            L("=====failed==3 \n");
             return FALSE;
         }
 
@@ -281,15 +294,18 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
                         if ((n < 0) && (errno == ETIMEDOUT)) {
                             break;
                         }
-                        if (n == 0)
+                        if (n == 0) {
                             rfbLog("webSocketsHandshake: client gone\n");
-                        else
+                            L("webSocketsHandshake: client gone\n");
+                        } else
                             rfbLogPerror("webSocketsHandshake: read");
                         free(response);
                         free(buf);
+                        L("=====failed==4 \n");
                         return FALSE;
                     }
                     rfbLog("Got key3\n");
+                    L("Got key3\n");
                     key3 = buf+len;
                     len += 8;
                 } else {
@@ -302,28 +318,34 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
                 buf[len-11] = '\0'; /* Trim trailing " HTTP/1.1\r\n" */
                 cl->wspath = strdup(path);
                 /* rfbLog("Got path: %s\n", path); */
+                L("Got path: %s\n", path);
             } else if ((strncasecmp("host: ", line, min(llen,6))) == 0) {
                 host = line+6;
                 buf[len-2] = '\0';
                 /* rfbLog("Got host: %s\n", host); */
+                L("Got host: %s\n", host);
             } else if ((strncasecmp("origin: ", line, min(llen,8))) == 0) {
                 origin = line+8;
                 buf[len-2] = '\0';
                 /* rfbLog("Got origin: %s\n", origin); */
+                L("Got origin: %s\n", origin); 
             } else if ((strncasecmp("sec-websocket-key1: ", line, min(llen,20))) == 0) {
                 key1 = line+20;
                 buf[len-2] = '\0';
                 /* rfbLog("Got key1: %s\n", key1); */
+                L("Got key1: %s\n", key1);
             } else if ((strncasecmp("sec-websocket-key2: ", line, min(llen,20))) == 0) {
                 key2 = line+20;
                 buf[len-2] = '\0';
                 /* rfbLog("Got key2: %s\n", key2); */
+                L("Got key2: %s\n", key2);
             /* HyBI */
 
 	    } else if ((strncasecmp("sec-websocket-protocol: ", line, min(llen,24))) == 0) {
                 protocol = line+24;
                 buf[len-2] = '\0';
                 rfbLog("Got protocol: %s\n", protocol);
+                L("Got protocol: %s\n", protocol);
             } else if ((strncasecmp("sec-websocket-origin: ", line, min(llen,22))) == 0) {
 		sec_ws_origin = line+22;
                 buf[len-2] = '\0';
@@ -343,6 +365,7 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
         rfbErr("webSocketsHandshake: incomplete client handshake\n");
         free(response);
         free(buf);
+        L("=====failed==5 \n");
         return FALSE;
     }
 
@@ -351,13 +374,16 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
             rfbErr("webSocketsHandshake: 'binary' protocol not supported with Hixie\n");
             free(response);
             free(buf);
+            L("=====failed==6 \n");
             return FALSE;
         }
         rfbLog("  - webSocketsHandshake: using binary/raw encoding\n");
+        L("  - webSocketsHandshake: using binary/raw encoding\n");
         base64 = FALSE;
         protocol = "binary";
     } else {
         rfbLog("  - webSocketsHandshake: using base64 encoding\n");
+        L("  - webSocketsHandshake: using base64 encoding\n");
         base64 = TRUE;
         if ((protocol) && (strstr(protocol, "base64"))) {
             protocol = "base64";
@@ -374,6 +400,7 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
     if (sec_ws_version) {
 	char accept[B64LEN(SHA1_HASH_SIZE) + 1];
 	rfbLog("  - WebSockets client version hybi-%02d\n", sec_ws_version);
+            L("  - WebSockets client version hybi-%02d\n", sec_ws_version);
 	webSocketsGenSha1Key(accept, sizeof(accept), sec_ws_key);
 	len = snprintf(response, WEBSOCKETS_MAX_HANDSHAKE_LEN,
 		 SERVER_HANDSHAKE_HYBI, accept, protocol);
@@ -382,10 +409,12 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
 	 * a final standard is established */
 	if (!(key1 && key2 && key3)) {
 	    rfbLog("  - WebSockets client version hixie-75\n");
+        L("  - WebSockets client version hixie-75\n");
 	    prefix[0] = '\0';
 	    trailer[0] = '\0';
 	} else {
 	    rfbLog("  - WebSockets client version hixie-76\n");
+        L("  - WebSockets client version hixie-76\n");
 	    snprintf(prefix, 5, "Sec-");
 	    webSocketsGenMd5(trailer, key1, key2, key3);
 	}
@@ -398,6 +427,7 @@ webSocketsHandshake(rfbClientPtr cl, char *scheme)
         rfbErr("webSocketsHandshake: failed sending WebSockets response\n");
         free(response);
         free(buf);
+        L("=====failed==7 \n");
         return FALSE;
     }
     /* rfbLog("webSocketsHandshake: %s\n", response); */

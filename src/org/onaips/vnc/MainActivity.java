@@ -77,7 +77,7 @@ public class MainActivity extends Activity
     };
     */
 
-    public static final String NETWORK_CHANGE_ACTION = "com.samkoon.NETWORK_CHANGE";
+    public static final String UPDATE_STATE_ACTION = "com.samkoon.UPDATE_STATE";
 
 
     private BroadcastReceiver _receiver = new BroadcastReceiver() {
@@ -102,7 +102,9 @@ public class MainActivity extends Activity
                 String host = data.getString(VncServerReceiver.KEY_HOST);
                 boolean connected = data.getBoolean(VncServerReceiver.KEY_CONNECTED);
                 log("vnc connect change==host:"+host+"==connected:"+connected);
-            }
+            } else if (action.equals(UPDATE_STATE_ACTION)) {
+                 updateState();
+             }
         }
     };
 
@@ -152,54 +154,20 @@ public class MainActivity extends Activity
         // Initialize VncSettings
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        checkRootPermission(preferences);
+        Intent intent = new Intent(getApplicationContext(), ServerManager.class);
+        startService(intent);
 
-        setStateLabels(ServerManager.isServerRunning());
+        checkRootPermission(preferences);
 
         //register activity private receiver
 		IntentFilter i;
 		i = new IntentFilter(VncServerReceiver.VNC_STATE_CHANGE_ACTION);
         i.addAction(VncServerReceiver.VNC_CONNECT_CHANGE_ACTION);
+        i.addAction(UPDATE_STATE_ACTION);
 		registerReceiver(_receiver, i);
 
 
-        findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                final Button startBtn=(Button)findViewById(R.id.start);
-
-                buttonAnimation= AnimationUtils.loadAnimation(MainActivity.this, R.anim.animation);
-                buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    public void onAnimationEnd(Animation animation) {
-                        startBtn.setEnabled(true);
-                        //b.setVisibility(View.INVISIBLE);
-                    }
-
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-
-                    public void onAnimationStart(Animation animation) {
-                        startBtn.setEnabled(false);
-
-                        if (ServerManager.isServerRunning()) {
-                            stopServer();
-                        } else {
-                            startServer();
-                        }
-                    }
-                });
-                startBtn.startAnimation(buttonAnimation);
-
-                return;
-            }
-        }) ;
-        findViewById(R.id.restart).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                restartServer();
-                return;
-            }
-        });
-
-        initSettingsBtn();
+        initBtnUI();
     }
 
 
@@ -209,6 +177,7 @@ public class MainActivity extends Activity
 	public void onResume()
 	{
 		super.onResume();
+        updateState();
 	}
 
     @Override
@@ -326,7 +295,44 @@ public class MainActivity extends Activity
 
     }
 
-    private void initSettingsBtn() {
+    private void initBtnUI() {
+
+        findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                final Button startBtn=(Button)findViewById(R.id.start);
+
+                buttonAnimation= AnimationUtils.loadAnimation(MainActivity.this, R.anim.animation);
+                buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    public void onAnimationEnd(Animation animation) {
+                        startBtn.setEnabled(true);
+                        //b.setVisibility(View.INVISIBLE);
+                    }
+
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    public void onAnimationStart(Animation animation) {
+                        startBtn.setEnabled(false);
+
+                        if (ServerManager.isServerRunning()) {
+                            stopServer();
+                        } else {
+                            startServer();
+                        }
+                    }
+                });
+                startBtn.startAnimation(buttonAnimation);
+
+                return;
+            }
+        }) ;
+        findViewById(R.id.restart).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                restartServer();
+                return;
+            }
+        });
+
         Button settings = (Button) findViewById(R.id.settings_btn);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,17 +344,6 @@ public class MainActivity extends Activity
     }
 
 
-
-
-
-
-
-
-
- 
-
-	
-	
 	public void log(String s)
 	{
 		Log.v(VNC_LOG, s);
@@ -392,7 +387,7 @@ public class MainActivity extends Activity
 		startDialog.setButton(AlertDialog.BUTTON1,"OK", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface arg0, int arg1) {
-				startDialog.dismiss();			
+				startDialog.dismiss();
 			}
 		});
 
@@ -450,7 +445,8 @@ public class MainActivity extends Activity
 
 			String ip= Util.getIpAddress();
 			if (ip.equals(""))
-				t.setText(Html.fromHtml("Not connected to a network."
+				t.setText(Html.fromHtml(
+                        this.getString(R.string.no_network_connected)
                         +"<br>"+
                         this.getString(R.string.usb_connect_msg)
                         +"<br>"+
@@ -513,7 +509,7 @@ public class MainActivity extends Activity
             Intent start = new Intent(VncServerReceiver.START_VNC_ACTION);
             Bundle settings = new Bundle();
             settings.putString(VncServerReceiver.KEY_PASSWORD, "");
-            settings.putString(VncServerReceiver.KEY_PORT, "");
+            settings.putString(VncServerReceiver.KEY_PORT, "843");
             settings.putString(VncServerReceiver.KEY_ROTATION, "180");
             start.putExtra(VncServerReceiver.EXTRA_SETTINGS_DATA, settings);
             MainActivity.this.sendBroadcast(start);

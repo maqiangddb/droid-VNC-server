@@ -1,6 +1,7 @@
 package org.onaips.vnc;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -21,7 +22,7 @@ public class MainApplication extends Application {
 	public void onCreate() {
 		super.onCreate(); 
 		//if (firstRun()) 
-			createBinaries();
+			//createBinaries(this);
 	}    
  
 	public void log(String s)
@@ -55,15 +56,15 @@ public class MainApplication extends Application {
 		return true;
 	}   
  
-	public void createBinaries()  
+	public static void createBinaries(Context context)
 	{   
-		String filesdir = getFilesDir().getAbsolutePath()+"/";
+		String filesdir = context.getFilesDir().getAbsolutePath()+"/";
  
 		//copy html related stuff
-		copyBinary(R.raw.webclients, filesdir + "/webclients.zip");
+		copyBinary(context, R.raw.webclients, filesdir + "/webclients.zip");
 		 
 		try {
-			ResLoader.unpackResources(R.raw.webclients, getApplicationContext(),filesdir);
+			ResLoader.unpackResources(R.raw.webclients, context.getApplicationContext(),filesdir);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -75,11 +76,11 @@ public class MainApplication extends Application {
     /* copy raw file to file path
     *
      */
-	public void copyBinary(int id,String path)
+	public static void copyBinary(Context context, int id,String path)
 	{
-		log("copy -> " + path);
+		Log.i(MainActivity.VNC_LOG, "copy -> " + path);
 		try {
-			InputStream ins = getResources().openRawResource(id);
+			InputStream ins = context.getResources().openRawResource(id);
 			int size = ins.available();
 
 			// Read the entire resource into a local byte buffer.
@@ -93,7 +94,7 @@ public class MainApplication extends Application {
 		}
 		catch (Exception e)
 		{
-			log("public void createBinary() error! : " + e.getMessage());
+			Log.i(MainActivity.VNC_LOG, "public void createBinary() error! : " + e.getMessage());
 		}
 	}  
 
