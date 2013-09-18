@@ -45,6 +45,7 @@ unsigned int *cmpbuf;
 unsigned int *vncbuf;
 
 static rfbScreenInfoPtr vncscr;
+static rfbClientPtr client;
 
 uint32_t idle = 0;
 uint32_t standby = 1;
@@ -55,6 +56,9 @@ uint8_t display_rotate_180 = 0;
 //reverse connection
 char *rhost = NULL;
 int rport = 5500;
+
+//MQ added
+char *ip_addr = NULL;
 
 void (*update_screen)(void)=NULL;
 
@@ -122,6 +126,7 @@ rfbNewClientHookPtr clientHook(rfbClientPtr cl)
   strcat(msg,"\n");
   sendMsgToGui(msg);
   free (msg);
+  client = cl;
 
   return RFB_CLIENT_ACCEPT;
 }
@@ -166,6 +171,7 @@ void initVncServer(int argc, char **argv)
   assert(vncscr != NULL);
 
   vncscr->desktopName = "Android";
+  vncscr->ip_addr = ip_addr;//Added by MQ
   vncscr->frameBuffer =(char *)vncbuf;
   vncscr->port = VNC_PORT;
   vncscr->kbdAddEvent = keyEvent;
@@ -261,6 +267,12 @@ void rotate(int value)
 void close_app()
 { 	
   L("Cleaning up...\n");
+
+      L("  disconnect clients:\n");
+      rfbCloseClient(client);
+      rfbClientConnectionGone(client);
+
+
   if (method == FRAMEBUFFER)
     closeFB();
   else if (method == ADB)
@@ -274,6 +286,12 @@ void close_app()
   sendServerStopped();
   unbindIPCserver();
   exit(0); /* normal exit status */
+}
+
+void saveIpAddr(char *str)
+{
+  L("==saveIpAddr==ip:%s\n", str);
+  ip_addr = str;
 }
 
 
@@ -343,6 +361,7 @@ void printUsage(char **argv)
     "-r <rotation>\t- Screen rotation (degrees) (0,90,180,270)\n"
     "-R <host:port>\t- Host for reverse connection\n" 
     "-s <scale>\t- Scale percentage (20,30,50,100,150)\n"
+    "-i <ip>\t- Device ip address\n"//MQ added
     "-z\t- Rotate display 180º (for zte compatibility)\n\n");
 }
 
@@ -351,6 +370,7 @@ void printUsage(char **argv)
 
 int main(int argc, char **argv)
 {
+  L("==main==\n");
   //pipe signals
   signal(SIGINT, close_app);
   signal(SIGKILL, close_app);
@@ -366,6 +386,12 @@ int main(int argc, char **argv)
           case 'h':
           printUsage(argv);
           exit(0); 
+          break;
+          case 'i':
+          i++;
+          L("ip_addr:%s \n", argv[i]);
+          //strcpy(ip_addr,argv[i]);
+          saveIpAddr(argv[i]);
           break;
           case 'p': 
           i++; 
