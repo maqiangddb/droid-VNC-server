@@ -94,7 +94,7 @@ ClientGoneHookPtr clientGone(rfbClientPtr cl)
 {
   //sendMsgToGui("~DISCONNECTED|\n");
   L("clientGone==~DISCONNECTED|=host:%s \n", cl->host);
-  
+  client = NULL;
   char *header="~DISCONNECTED|";// add host msg
   char *msg=malloc(sizeof(char)*((strlen(cl->host)) + strlen(header)+2));
   msg[0]='\0';
@@ -151,6 +151,7 @@ void sendServerStarted(){
 
 void sendServerStopped()
 {
+  L("sendServerStopped\n");
   sendMsgToGui("~SERVERSTOPPED|\n");
 }
 
@@ -268,9 +269,12 @@ void close_app()
 { 	
   L("Cleaning up...\n");
 
-      L("  disconnect clients:\n");
-      rfbCloseClient(client);
-      rfbClientConnectionGone(client);
+      
+      if(client != NULL) {
+        L("  disconnect clients:\n");
+        rfbCloseClient(client);
+        rfbClientConnectionGone(client);
+      }
 
 
   if (method == FRAMEBUFFER)

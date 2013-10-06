@@ -1,16 +1,15 @@
 package org.onaips.vnc;
 
 import android.annotation.TargetApi;
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,7 +28,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class ServerManager extends Service {
+public class ServerManager extends IntentService {
 
     private static final boolean ENG = false;
     SharedPreferences _preferencesManager;
@@ -43,6 +41,15 @@ public class ServerManager extends Service {
 	private String reverseHost = null;
 	private final IBinder mBinder = new MyBinder();
 	private Handler _uiHandler;
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+    */
+    public ServerManager() {
+        super("VncIntentServic");
+        log("ServerManager==VncIntentServic");
+    }
 
 
     public class MyBinder extends Binder {
@@ -58,13 +65,18 @@ public class ServerManager extends Service {
     }
 
     @Override
+    protected void onHandleIntent(Intent intent) {
+        log("================onHandleIntent===");
+        handIntent(intent);
+    }
+
+    @Override
 	public void onCreate() {
 		super.onCreate();
         log("ServerManager===onCreate");
 
         _uiHandler = new Handler(Looper.getMainLooper());
         _preferencesManager = PreferenceManager.getDefaultSharedPreferences(this);
-        copyWebClientFile();
 
 		if (_svnListener != null) {
 			log("_svnListener was already active!");
@@ -80,7 +92,8 @@ public class ServerManager extends Service {
 	@Override
 	public void onStart(Intent intent, int startId) {
         log("========onStart");
-        handStartIntent(intent);
+        copyWebClientFile();
+        handIntent(intent);
 	}
 
     @Override
@@ -95,26 +108,21 @@ public class ServerManager extends Service {
 
 
 
-	@Override
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+    @Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
         log("========onStartCommand");
-        handStartIntent(intent);
-		return START_NOT_STICKY;
+        //handIntent(intent);
+		return super.onStartCommand(intent,flags,startId);
 	}
 
     private void copyWebClientFile() {
 
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                return null;
-            }
-        };
         MainApplication.createBinaries(this);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    private void handStartIntent(Intent intent) {
+    private void handIntent(Intent intent) {
         log("onHandleIntent==intent:"+intent);
         String action = intent.getAction();
         if (action == null) {
@@ -139,6 +147,13 @@ public class ServerManager extends Service {
             }
             checkNetworkConnect();
             sendStateIntent(state);
+        } else if (action.equals(VncServerReceiver.STOP_VNC_ACTION)) {
+            if (isServerRunning()) {
+                killServer();
+            } else {
+                log("vnc already stoped");
+                sendStateIntent(VncServerReceiver.STATE_STOPED);
+            }
         }
     }
 
@@ -151,10 +166,21 @@ public class ServerManager extends Service {
     private void saveSettings(SharedPreferences preferences, String password, String port, String rotate) {
         log("saveSettings==password:"+password+"=port:"+port+"==rotate:"+rotate);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(VncSettings.KEY_PASSWORD, password);
-        editor.putString(VncSettings.KEY_PORT, port);
-        editor.putString(VncSettings.KEY_ROTATION, rotate);
+        if (checkString(password)) {
+            editor.putString(VncSettings.KEY_PASSWORD, password);
+        }
+        if (checkString(port)) {
+            editor.putString(VncSettings.KEY_PORT, port);
+        }
+        if (checkString(rotate)) {
+            editor.putString(VncSettings.KEY_ROTATION, rotate);
+        }
         editor.commit();
+    }
+
+    private boolean checkString (String msg) {
+
+        return (msg !=null && msg != "");
     }
 
 	public void startServer() {
@@ -163,12 +189,15 @@ public class ServerManager extends Service {
 			Process sh;
 			String files_dir = getFilesDir().getAbsolutePath();
 
-			String password = _preferencesManager.getString(VncSettings.KEY_PASSWORD, "");
+			String password = _preferencesManager.getString(VncSettings.KEY_PASSWORD, "12345678");
 			String password_check = "";
 			if (!password.equals(""))
 				password_check = "-p " + password;
 
-			String rotation = _preferencesManager.getString(VncSettings.KEY_ROTATION, "180");
+            String ip_string = "";
+            ip_string = "-i " + Util.getIpAddress();
+
+			String rotation = "0";//_preferencesManager.getString(VncSettings.KEY_ROTATION, "0");
 			if (!rotation.equals(""))
 				rotation = "-r " + rotation;
 
@@ -201,6 +230,7 @@ public class ServerManager extends Service {
 			//our exec file is disguised as a library so it will get packed to lib folder according to cpu_abi
 			String droidvncserver_exec=getFilesDir().getParent()
                     + "/lib/libandroidvncserver.so";
+            droidvncserver_exec = "/system/lib/libandroidvncserver.so";
 			File f=new File (droidvncserver_exec);
 
 			if (!f.exists())
@@ -216,7 +246,7 @@ public class ServerManager extends Service {
             log("running chmod 777:"+p);
  
 			String permission_string="chmod 777 " + droidvncserver_exec;
-			String server_string= droidvncserver_exec  + " " + password_check + " " + rotation+ " " + scaling_string + " " + port_string + " "
+			String server_string= droidvncserver_exec + " " + ip_string  + " " + password_check + " " + rotation+ " " + scaling_string + " " + port_string + " "
 			+ reverse_string + " " + display_method ;
 
             log("====exec:"+server_string);
@@ -294,6 +324,8 @@ public class ServerManager extends Service {
 
         Intent intent = new Intent(VncServerReceiver.VNC_STATE_CHANGE_ACTION);
         intent.putExtra(VncServerReceiver.EXTRA_STATE, state);
+        intent.putExtra(VncServerReceiver.EXTRA_IP, Util.getIpAddress());
+        intent.putExtra(VncServerReceiver.EXTRA_HTTP_PORT, Util.getHttpPort(this));
         log(">>>>>>send intent:" + intent);
         sendBroadcast(intent);
     }
@@ -426,10 +458,10 @@ public class ServerManager extends Service {
 
 					if (resp.length() > 5
 							&& resp.substring(0, 6).equals("~CLIP|")) {
-						resp = resp.substring(7, resp.length() - 1);
-						ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+						//resp = resp.substring(7, resp.length() - 1);
+						//ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-						clipboard.setText(resp.toString());
+						//clipboard.setText(resp.toString());
 					} else if (resp.length() > 6
 							&& resp.substring(0, 6).equals("~SHOW|")) {
 						resp = resp.substring(6, resp.length() - 1);

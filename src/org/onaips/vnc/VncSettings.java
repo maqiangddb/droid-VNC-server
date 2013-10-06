@@ -18,6 +18,7 @@ public class VncSettings extends PreferenceActivity {
     public static final String KEY_NOTIFY_CLIENT = "notifyclient";
     public static final String KEY_SCREEN_OFF = "screenturnoff";
     public static final String KEY_AROOT = "asroot";
+    public static final String KEY_VNC_STATE = "vnc_state";
 
     /** Called when the activity is first created. */
 	@Override

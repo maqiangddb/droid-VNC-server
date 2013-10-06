@@ -42,6 +42,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/close"
                         android:text="@string/close" />
+
                 </LinearLayout>
 
             <TextView

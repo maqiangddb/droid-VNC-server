@@ -256,7 +256,7 @@ unsigned int *readBufferADB(void)
   {
     read_socket(sockfd,message,sizeof(struct _message));
 
-    //         L("---\ncommand=%32X\narg0=%32X\narg1=%32X\ndata_len=%d\n---\n",message->command,message->arg0,message->arg1,message->data_length);
+    //L("---\ncommand=%32X\narg0=%32X\narg1=%32X\ndata_len=%d\n---\n",message->command,message->arg0,message->arg1,message->data_length);
 
     if (message->command==A_CLSE)
     break;
@@ -271,7 +271,7 @@ unsigned int *readBufferADB(void)
     read_socket(sockfd,s,message->data_length);
     count+=message->data_length;
 
-    //       L("ahah %d %d\n",message->data_length,n);
+    //L("ahah %d %d\n",message->data_length,n);
 
     n=write_socket(sockfd,okay_message,sizeof(struct _message));
     if (n<0)

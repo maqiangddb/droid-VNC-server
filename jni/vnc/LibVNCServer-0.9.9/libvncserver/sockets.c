@@ -43,6 +43,9 @@
 
 #include <rfb/rfb.h>
 
+  //added for LOG MQ
+#include <gui.h>
+
 #ifdef LIBVNCSERVER_HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -546,6 +549,7 @@ rfbReadExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
     int n;
     fd_set fds;
     struct timeval tv;
+    int l = len;//MQ
 
     while (len > 0) {
 #ifdef LIBVNCSERVER_WITH_WEBSOCKETS
@@ -612,17 +616,32 @@ rfbReadExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
 	    fprintf(stderr,"%02x ",(unsigned char)buf[n]);
     fprintf(stderr,"\n");
 #endif
-
+/*
+    L("===============================\n");
+    if (l > 0)
+    {
+    L("===ReadExact %d bytes\n",l);
+    for(n=0;n<l;n++)
+        L("%02x ",(unsigned char)buf[n]);
+    L("\n");
+    }
+    L("===============================\n");
+    */
     return 1;
 }
 
 int rfbReadExact(rfbClientPtr cl,char* buf,int len)
 {
+    //L("rfbReadExact\n");
   /* favor the per-screen value if set */
-  if(cl->screen && cl->screen->maxClientWait)
+  if(cl->screen && cl->screen->maxClientWait) {
+    //L("timeout:%d\n", cl->screen->maxClientWait);
     return(rfbReadExactTimeout(cl,buf,len,cl->screen->maxClientWait));
-  else
+    }
+  else {
+    //L("timeout:%d\n", rfbMaxClientWait);
     return(rfbReadExactTimeout(cl,buf,len,rfbMaxClientWait));
+    }
 }
 
 /*
@@ -634,6 +653,7 @@ int rfbReadExact(rfbClientPtr cl,char* buf,int len)
 int
 rfbPeekExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
 {
+    //L("sockets.c===rfbPeekExactTimeout\n");
     int sock = cl->sock;
     int n;
     fd_set fds;
@@ -641,11 +661,14 @@ rfbPeekExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
 
     while (len > 0) {
 #ifdef LIBVNCSERVER_WITH_WEBSOCKETS
-	if (cl->sslctx)
+        //L("LIBVNCSERVER_WITH_WEBSOCKETS \n");
+	if (cl->sslctx) {
 	    n = rfbssl_peek(cl, buf, len);
-	else
+                L("rfbssl_peek== len:%d \n", len);
+	} else {}
 #endif
 	    n = recv(sock, buf, len, MSG_PEEK);
+                L("recv==len:%d==buf:%s \n", len, buf);
 
         if (n == len) {
 
@@ -657,12 +680,14 @@ rfbPeekExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
 
         } else {
 #ifdef WIN32
+            L("WIN32 \n");
 	    errno = WSAGetLastError();
 #endif
 	    if (errno == EINTR)
 		continue;
 
 #ifdef LIBVNCSERVER_ENOENT_WORKAROUND
+    L("LIBVNCSERVER_ENOENT_WORKAROUND \n");
 	    if (errno != ENOENT)
 #endif
             if (errno != EWOULDBLOCK && errno != EAGAIN) {
@@ -682,6 +707,7 @@ rfbPeekExactTimeout(rfbClientPtr cl, char* buf, int len, int timeout)
             n = select(sock+1, &fds, NULL, &fds, &tv);
             if (n < 0) {
                 rfbLogPerror("PeekExact: select");
+                L("PeekExact: select \n");
                 return n;
             }
             if (n == 0) {

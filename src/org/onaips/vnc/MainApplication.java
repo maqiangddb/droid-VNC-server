@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,10 +62,21 @@ public class MainApplication extends Application {
 		String filesdir = context.getFilesDir().getAbsolutePath()+"/";
  
 		//copy html related stuff
-		copyBinary(context, R.raw.webclients, filesdir + "/webclients.zip");
+        File client = new File(filesdir+"/webclients.zip");
+        if (!client.exists()) {
+            Util.LOGI("webClient zip file not exists, copy....");
+		    copyBinary(context, R.raw.webclients, filesdir + "/webclients.zip");
+            //copy ssl related stuff
+            copyBinary(context, R.raw.self, filesdir + "/self.pem");
+        }
 		 
 		try {
-			ResLoader.unpackResources(R.raw.webclients, context.getApplicationContext(),filesdir);
+			//ResLoader.unpackResources(R.raw.webclients, context.getApplicationContext(),filesdir);
+            File web = new File(filesdir+"/webclients");
+            if (!web.exists()) {
+                Util.LOGI("webClient zip unpacking....");
+                ResLoader.unpackResources(filesdir+"/webclients.zip", filesdir);
+            }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

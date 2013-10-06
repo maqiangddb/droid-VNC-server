@@ -6,11 +6,13 @@
 
 <HTML>
 <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <TITLE>
-$USER's $DESKTOP desktop ($DISPLAY)
+$USER's $DESKTOP desktop ($DISPLAY_$IP_ADDR)
 </TITLE>
+<!--script src="status.js"></script-->
 </head> 
-<APPLET CODE=VncViewer.class ARCHIVE=java-applet/VncViewer.jar
+<APPLET CODE=VncViewer.class ARCHIVE=java-applet/VncViewer_20130930.jar
         WIDTH=$APPLETWIDTH HEIGHT=$APPLETHEIGHT>
 <param name=PORT value=$PORT>
 <param name="Open New Window" value=yes>
@@ -18,7 +20,11 @@ $USER's $DESKTOP desktop ($DISPLAY)
 <br/>
 <br/>
 
-If the above Java applet does not work, you can also try the new JavaScript-only <a href="http://kanaka.github.com/noVNC/">noVNC</a> viewer. You will need a HTML5-capable browser though.
+<!--If the above Java applet does not work, you can also try the new JavaScript-only noVNC viewer. You will need a HTML5-capable browser though. -->
+如果无法加载java插件，请点击下面按钮使用远程监控。
+<br />
+<br />
+
 <script language="JavaScript">
     <!--
     function start_novnc(){
@@ -30,16 +36,16 @@ If the above Java applet does not work, you can also try the new JavaScript-only
 	   if(host.charAt(host.length-1) != "]")
 	      host = host + "]";
 	}
-	open("novnc/vnc_auto.html?host=" + host + "&port=$PORT&true_color=1");
+	open("novnc/vnc.html?host=" + host + "&port=$PORT&true_color=1");
     }
     -->
 </script>
 <form name="novnc_button_form">
-  <input type="button" name="novnc_button" value="Click here to connect using noVNC" onClick='start_novnc()'>
+  <input type="button" name="novnc_button" value="点击这里连接远程监控" onClick='start_novnc()'>
 </form>
 
 <br/>
 <br/>
 <br/>
-<A href="http://libvncserver.sf.net/">LibVNCServer/LibVNCClient Homepage</A>
+
 </HTML>

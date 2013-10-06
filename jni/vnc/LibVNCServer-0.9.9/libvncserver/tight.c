@@ -43,6 +43,9 @@
 #endif
 #include "turbojpeg.h"
 
+     //added for LOG MQ
+#include <gui.h>
+
 
 /* Note: The following constant should not be changed. */
 #define TIGHT_MIN_TO_COMPRESS 12
@@ -294,12 +297,14 @@ SendRectEncodingTight(rfbClientPtr cl,
                          int w,
                          int h)
 {
+    //L("<<<<<<<<<<<<<<<<<<SendRectEncodingTight--[%d, %d, %d, %d]\n", x, y, w, h);
     int nMaxRows;
     uint32_t colorValue;
     int dx, dy, dw, dh;
     int x_best, y_best, w_best, h_best;
     char *fbptr;
 
+//L("1=====rfbSendUpdateBuf\n");
     rfbSendUpdateBuf(cl);
 
     compressLevel = cl->tightCompressLevel;
@@ -339,8 +344,10 @@ SendRectEncodingTight(rfbClientPtr cl,
         usePixelFormat24 = FALSE;
     }
 
-    if (!cl->enableLastRectEncoding || w * h < MIN_SPLIT_RECT_SIZE)
+    if (!cl->enableLastRectEncoding || w * h < MIN_SPLIT_RECT_SIZE) {
+        //L(">>>>>>>>>>>>>>>>>1>SendRectSimple>SendRectEncodingTight\n");
         return SendRectSimple(cl, x, y, w, h);
+    }
 
     /* Make sure we can write at least one pixel into tightBeforeBuf. */
 
@@ -362,6 +369,7 @@ SendRectEncodingTight(rfbClientPtr cl,
         maxRectWidth = tightConf[compressLevel].maxRectWidth;
         nMaxWidth = (w > maxRectWidth) ? maxRectWidth : w;
         nMaxRows = maxRectSize / nMaxWidth;
+        //L("-----compressLevel:%d---[%d, %d, %d, %d]\n", compressLevel, maxRectSize, maxRectWidth, nMaxWidth, nMaxRows);
     }
 
     /* Try to find large solid-color areas and send them separately. */
@@ -371,8 +379,11 @@ SendRectEncodingTight(rfbClientPtr cl,
         /* If a rectangle becomes too large, send its upper part now. */
 
         if (dy - y >= nMaxRows) {
-            if (!SendRectSimple(cl, x, y, w, nMaxRows))
+            //L("-SendRectEncodingTight---------SendRectSimple--1\n");
+            if (!SendRectSimple(cl, x, y, w, nMaxRows)) {
+                //L(">>>>>>>>>>>>>>>>>2>SendRectEncodingTight\n");
                 return 0;
+            }
             y += nMaxRows;
             h -= nMaxRows;
         }
@@ -384,7 +395,7 @@ SendRectEncodingTight(rfbClientPtr cl,
 
             dw = (dx + MAX_SPLIT_TILE_SIZE <= x + w) ?
                  MAX_SPLIT_TILE_SIZE : (x + w - dx);
-
+                 //L("-----CheckSolidTile------SendRectEncodingTight\n");
             if (CheckSolidTile(cl, dx, dy, dw, dh, &colorValue, FALSE)) {
 
                 if (subsampLevel == TJ_GRAYSCALE && qualityLevel != -1) {
@@ -398,6 +409,7 @@ SendRectEncodingTight(rfbClientPtr cl,
 
                 /* Get dimensions of solid-color area. */
 
+                 //L("-----FindBestSolidArea------SendRectEncodingTight\n");
                 FindBestSolidArea(cl, dx, dy, w - (dx - x), h - (dy - y),
 				  colorValue, &w_best, &h_best);
 
@@ -411,23 +423,31 @@ SendRectEncodingTight(rfbClientPtr cl,
                 /* Try to extend solid rectangle to maximum size. */
 
                 x_best = dx; y_best = dy;
+                 //L("-----ExtendSolidArea------SendRectEncodingTight\n");
                 ExtendSolidArea(cl, x, y, w, h, colorValue,
                                 &x_best, &y_best, &w_best, &h_best);
 
                 /* Send rectangles at top and left to solid-color area. */
-
+                //L("-SendRectEncodingTight---------SendRectSimple--2\n");
                 if ( y_best != y &&
-                     !SendRectSimple(cl, x, y, w, y_best-y) )
+                     !SendRectSimple(cl, x, y, w, y_best-y) ) {
+                    //L(">>>>>>>>>>>>>>>>>3>SendRectEncodingTight\n");
                     return FALSE;
+            }
+            //L("-SendRectEncodingTight---------SendRectEncodingTight-1-\n");
                 if ( x_best != x &&
                      !SendRectEncodingTight(cl, x, y_best,
-                                               x_best-x, h_best) )
+                                               x_best-x, h_best) ) {
+                    //L(">>>>>>>>>>>>>>>>>4>SendRectEncodingTight\n");
                     return FALSE;
+            }
 
                 /* Send solid-color rectangle. */
-
-                if (!SendTightHeader(cl, x_best, y_best, w_best, h_best))
+            //L("-SendRectEncodingTight---------SendTightHeader--\n");
+                if (!SendTightHeader(cl, x_best, y_best, w_best, h_best)) {
+                    //L(">>>>>>>>>>>>>>>>>5>SendRectEncodingTight\n");
                     return FALSE;
+                }
 
                 fbptr = (cl->scaledScreen->frameBuffer +
                          (cl->scaledScreen->paddedWidthInBytes * y_best) +
@@ -436,23 +456,30 @@ SendRectEncodingTight(rfbClientPtr cl,
                 (*cl->translateFn)(cl->translateLookupTable, &cl->screen->serverFormat,
                                    &cl->format, fbptr, tightBeforeBuf,
                                    cl->scaledScreen->paddedWidthInBytes, 1, 1);
-
-                if (!SendSolidRect(cl))
+                //L("-SendRectEncodingTight---------SendSolidRect--\n");
+                if (!SendSolidRect(cl)) {
+                    //L(">>>>>>>>>>>>>>>>>6>SendRectEncodingTight\n");
                     return FALSE;
+                }
 
                 /* Send remaining rectangles (at right and bottom). */
-
+                //L("-SendRectEncodingTight---------SendRectEncodingTight-2-\n");
                 if ( x_best + w_best != x + w &&
                      !SendRectEncodingTight(cl, x_best + w_best, y_best,
-                                               w - (x_best-x) - w_best, h_best) )
+                                               w - (x_best-x) - w_best, h_best) ) {
+                    //L(">>>>>>>>>>>>>>>>>7>SendRectEncodingTight\n");
                     return FALSE;
+            }
+            //L("-SendRectEncodingTight---------SendRectEncodingTight-3-\n");
                 if ( y_best + h_best != y + h &&
                      !SendRectEncodingTight(cl, x, y_best + h_best,
-                                               w, h - (y_best-y) - h_best) )
+                                               w, h - (y_best-y) - h_best) ) {
+                    //L(">>>>>>>>>>>>>>>>>8>SendRectEncodingTight\n");
                     return FALSE;
+            }
 
                 /* Return after all recursive calls are done. */
-
+                //L(">>>>>>>>>>>>>>>>>9>SendRectEncodingTight\n");
                 return TRUE;
             }
 
@@ -461,7 +488,7 @@ SendRectEncodingTight(rfbClientPtr cl,
     }
 
     /* No suitable solid-color rectangles found. */
-
+    //L(">>>>>>>>>>>>>>>>>10>SendRectSimple>SendRectEncodingTight\n");
     return SendRectSimple(cl, x, y, w, h);
 }
 
@@ -476,6 +503,7 @@ FindBestSolidArea(rfbClientPtr cl,
                   int *w_ptr,
                   int *h_ptr)
 {
+    //L("<<<<<<FindBestSolidArea---[%d, %d, %d, %d]\n", x, y, w, h);
     int dx, dy, dw, dh;
     int w_prev;
     int w_best = 0, h_best = 0;
@@ -524,6 +552,7 @@ ExtendSolidArea(rfbClientPtr cl,
                 int *w_ptr,
                 int *h_ptr)
 {
+    //L("<<<<<<ExtendSolidArea---[%d, %d, %d, %d]\n", x, y, w, h);
     int cx, cy;
 
     /* Try to extend the area upwards. */
@@ -565,6 +594,7 @@ ExtendSolidArea(rfbClientPtr cl,
 
 static rfbBool CheckSolidTile(rfbClientPtr cl, int x, int y, int w, int h, uint32_t* colorPtr, rfbBool needSameColor)
 {
+    //L("<<<<<<<CheckSolidTile---[%d, %d, %d, %d]\n", x, y, w, h);
     switch(cl->screen->serverFormat.bitsPerPixel) {
     case 32:
         return CheckSolidTile32(cl, x, y, w, h, colorPtr, needSameColor);
@@ -613,6 +643,7 @@ DEFINE_CHECK_SOLID_FUNCTION(32)
 static rfbBool
 SendRectSimple(rfbClientPtr cl, int x, int y, int w, int h)
 {
+    //L("<<<SendRectSimple--[%d, %d ,%d, %d]\n", x, y, w, h);
     int maxBeforeSize, maxAfterSize;
     int maxRectSize, maxRectWidth;
     int subrectMaxWidth, subrectMaxHeight;
@@ -651,11 +682,13 @@ SendRectSimple(rfbClientPtr cl, int x, int y, int w, int h)
             for (dx = 0; dx < w; dx += maxRectWidth) {
                 rw = (dx + maxRectWidth < w) ? maxRectWidth : w - dx;
                 rh = (dy + subrectMaxHeight < h) ? subrectMaxHeight : h - dy;
+                //L("-1------------------SendSubrect---SendRectSimple\n");
                 if (!SendSubrect(cl, x + dx, y + dy, rw, rh))
                     return FALSE;
             }
         }
     } else {
+        //L("-2------------------SendSubrect---SendRectSimple\n");
         if (!SendSubrect(cl, x, y, w, h))
             return FALSE;
     }
@@ -670,24 +703,29 @@ SendSubrect(rfbClientPtr cl,
             int w,
             int h)
 {
+    //L("<<<SendSubrect-[%d, %d, %d, %d]\n", x, y, w, h);
     char *fbptr;
     rfbBool success = FALSE;
 
     /* Send pending data if there is more than 128 bytes. */
     if (cl->ublen > 128) {
+//L("2=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
 
-    if (!SendTightHeader(cl, x, y, w, h))
+    if (!SendTightHeader(cl, x, y, w, h)) {
         return FALSE;
+    }
 
     fbptr = (cl->scaledScreen->frameBuffer
              + (cl->scaledScreen->paddedWidthInBytes * y)
              + (x * (cl->scaledScreen->bitsPerPixel / 8)));
 
-    if (subsampLevel == TJ_GRAYSCALE && qualityLevel != -1)
+    if (subsampLevel == TJ_GRAYSCALE && qualityLevel != -1) {
+        //L(">>>SendSubrect---SendJpegRect\n");
         return SendJpegRect(cl, x, y, w, h, qualityLevel);
+    }
 
     paletteMaxColors = w * h / tightConf[compressLevel].idxMaxColorsDivisor;
     if(qualityLevel != -1)
@@ -707,10 +745,12 @@ SendSubrect(rfbClientPtr cl,
            with JPEG, since it is unnecessary */
         switch (cl->format.bitsPerPixel) {
         case 16:
+        //L("----FastFillPalette16----SendSubrect\n");
             FastFillPalette16(cl, (uint16_t *)fbptr, w,
                               cl->scaledScreen->paddedWidthInBytes / 2, h);
             break;
         default:
+        //L("----FastFillPalette32----SendSubrect\n");
             FastFillPalette32(cl, (uint32_t *)fbptr, w,
                               cl->scaledScreen->paddedWidthInBytes / 4, h);
         }
@@ -729,12 +769,15 @@ SendSubrect(rfbClientPtr cl,
 
         switch (cl->format.bitsPerPixel) {
         case 8:
+        //L("----FillPalette8----SendSubrect\n");
             FillPalette8(w * h);
             break;
         case 16:
+        //L("----FillPalette16----SendSubrect\n");
             FillPalette16(w * h);
             break;
         default:
+        //L("----FillPalette32----SendSubrect\n");
             FillPalette32(w * h);
         }
     }
@@ -770,9 +813,11 @@ SendTightHeader(rfbClientPtr cl,
                 int w,
                 int h)
 {
+    //L("<<<SendTightHeader--[%d, %d, %d, %d]\n", x, y, w, h);
     rfbFramebufferUpdateRectHeader rect;
 
     if (cl->ublen + sz_rfbFramebufferUpdateRectHeader > UPDATE_BUF_SIZE) {
+//L("3=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -802,6 +847,7 @@ SendTightHeader(rfbClientPtr cl,
 static rfbBool
 SendSolidRect(rfbClientPtr cl)
 {
+    //L("<<<SendSolidRect\n");
     int len;
 
     if (usePixelFormat24) {
@@ -811,6 +857,7 @@ SendSolidRect(rfbClientPtr cl)
         len = cl->format.bitsPerPixel / 8;
 
     if (cl->ublen + 1 + len > UPDATE_BUF_SIZE) {
+//L("4=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -831,6 +878,7 @@ SendMonoRect(rfbClientPtr cl,
              int w,
              int h)
 {
+    //L("<<<SendMonoRect\n");
     int streamId = 1;
     int paletteLen, dataLen;
 
@@ -844,6 +892,7 @@ SendMonoRect(rfbClientPtr cl,
 
     if ( cl->ublen + TIGHT_MIN_TO_COMPRESS + 6 +
 	 2 * cl->format.bitsPerPixel / 8 > UPDATE_BUF_SIZE ) {
+//L("5=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -911,6 +960,7 @@ SendIndexedRect(rfbClientPtr cl,
                 int w,
                 int h)
 {
+    //L("<<<SendIndexedRect\n");
     int streamId = 2;
     int i, entryLen;
 
@@ -923,6 +973,7 @@ SendIndexedRect(rfbClientPtr cl,
     if ( cl->ublen + TIGHT_MIN_TO_COMPRESS + 6 +
 	 paletteNumColors * cl->format.bitsPerPixel / 8 >
          UPDATE_BUF_SIZE ) {
+//L("6=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -990,6 +1041,7 @@ SendFullColorRect(rfbClientPtr cl,
                   int w,
                   int h)
 {
+    //L("<<<SendFullColorRect\n");
     int streamId = 0;
     int len;
 
@@ -1000,6 +1052,7 @@ SendFullColorRect(rfbClientPtr cl,
 #endif
 
     if (cl->ublen + TIGHT_MIN_TO_COMPRESS + 1 > UPDATE_BUF_SIZE) {
+//L("7=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -1107,6 +1160,7 @@ static rfbBool SendCompressedData(rfbClientPtr cl, char *buf,
             portionLen = compressedLen - i;
         }
         if (cl->ublen + portionLen > UPDATE_BUF_SIZE) {
+//L("8=====rfbSendUpdateBuf\n");
             if (!rfbSendUpdateBuf(cl))
                 return FALSE;
         }
@@ -1133,7 +1187,10 @@ FillPalette8(int count)
     paletteNumColors = 0;
 
     c0 = data[0];
-    for (i = 1; i < count && data[i] == c0; i++);
+    for (i = 1; i < count && data[i] == c0; i++) {
+        ;
+    }
+
     if (i == count) {
         paletteNumColors = 1;
         return;                 /* Solid rectangle */
@@ -1554,6 +1611,7 @@ DEFINE_MONO_ENCODE_FUNCTION(32)
 static rfbBool
 SendJpegRect(rfbClientPtr cl, int x, int y, int w, int h, int quality)
 {
+    //L("====SendJpegRect--[%d, %d, %d, %d, %d]\n", x, y, w, h, quality);
     unsigned char *srcbuf;
     int ps = cl->screen->serverFormat.bitsPerPixel / 8;
     int subsamp = subsampLevel2tjsubsamp[subsampLevel];
@@ -1654,6 +1712,7 @@ SendJpegRect(rfbClientPtr cl, int x, int y, int w, int h, int quality)
     }
 
     if (cl->ublen + TIGHT_MIN_TO_COMPRESS + 1 > UPDATE_BUF_SIZE) {
+//L("9=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }
@@ -1887,6 +1946,7 @@ static rfbBool SendPngRect(rfbClientPtr cl, int x, int y, int w, int h) {
     /* done v */
 
     if (cl->ublen + TIGHT_MIN_TO_COMPRESS + 1 > UPDATE_BUF_SIZE) {
+//L("10=====rfbSendUpdateBuf\n");
         if (!rfbSendUpdateBuf(cl))
             return FALSE;
     }

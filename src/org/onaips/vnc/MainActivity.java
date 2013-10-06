@@ -145,7 +145,7 @@ public class MainActivity extends Activity
 
         setContentView(R.layout.main);
 
-        _shouldBindService = false;
+        _shouldBindService = true;
         if (_shouldBindService) {
             doBindService();
         }
@@ -429,7 +429,7 @@ public class MainActivity extends Activity
 		Button b2=(Button)findViewById(R.id.restart);
 		if (state)
 		{
-			String port=preferences.getString("port", "5901");
+			String port=preferences.getString("port", "843");
 			String httpport;
 			try
 			{
@@ -439,8 +439,8 @@ public class MainActivity extends Activity
 			}
 			catch(NumberFormatException e)
 			{
-				port="5901";
-				httpport="5801";
+				port="843";
+				httpport="743";
 			}
 
 			String ip= Util.getIpAddress();

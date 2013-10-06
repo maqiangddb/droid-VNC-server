@@ -5,25 +5,18 @@ import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ResLoader {
 
-    /**
-     * @param id Resource id.
-     * @param C context
-     * @param destFolder unpack to file.
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
-
-    static void unpackResources(int id,Context C,String destFolder) throws FileNotFoundException, IOException {
-    	 // Open the ZipInputStream
-        ZipInputStream inputStream = new ZipInputStream(C.getResources().openRawResource(id));
+    static void unpackResources(InputStream in, String destFolder) throws IOException {
+        ZipInputStream inputStream = new ZipInputStream(in);
 
         // Loop through all the files and folders
         for (ZipEntry entry = inputStream.getNextEntry(); entry != null; entry = inputStream
@@ -66,11 +59,31 @@ public class ResLoader {
                 bufferedOutputStream.flush();
                 bufferedOutputStream.close();
             }
-            
+
             // Close the current entry
             inputStream.closeEntry();
         }
         inputStream.close();
+
+    }
+
+    /**
+     * @param id Resource id.
+     * @param C context
+     * @param destFolder unpack to file.
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
+
+    static void unpackResources(int id,Context C,String destFolder) throws FileNotFoundException, IOException {
+    	 // Open the raw zip file
+        unpackResources(C.getResources().openRawResource(id), destFolder);
+    }
+
+    static void unpackResources(String f, String destFolder) throws IOException {
+        Util.LOGI("unpackResources=="+f+"----->"+destFolder);
+        //open the zip file
+        unpackResources(new FileInputStream(f), destFolder);
     }
     
 	public static void log(String s)

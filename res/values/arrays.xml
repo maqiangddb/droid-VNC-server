@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="vnc_state_entries">Started</string-array>
+    <string-array name="vnc_state_entries">
+        <item>Started</item>
+        <item>Stoped</item>
+    </string-array>
+    <string-array name="vnc_state_entryValues">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
 </resources>

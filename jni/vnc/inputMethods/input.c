@@ -193,9 +193,9 @@ return 23; //I with acute -> i with grave
 
 void keyEvent(rfbBool down, rfbKeySym key, rfbClientPtr cl)
 {
-  L("KEY_EVENT---keyEvent...---\n");
+  //L("KEY_EVENT---keyEvent...---\n");
   int code;
-        L("KEY_EVENT--Got keysym: %04x (down=%d)\n", (unsigned int)key, (int)down);
+        //L("KEY_EVENT--Got keysym: %04x (down=%d)\n", (unsigned int)key, (int)down);
 
   setIdle(0);
   int sh = 0;
@@ -206,7 +206,7 @@ void keyEvent(rfbBool down, rfbKeySym key, rfbClientPtr cl)
 
   if ((code = keysym2scancode(down, key, cl,&sh,&alt)))
   {
-    L("KEY_EVENT--if left shift:%d, if left alt:%d, key:%d, down:%d \n", sh, alt, key, down);
+    //L("KEY_EVENT--if left shift:%d, if left alt:%d, key:%d, down:%d \n", sh, alt, key, down);
 
     int ret=0;
 
@@ -224,7 +224,7 @@ void keyEvent(rfbBool down, rfbKeySym key, rfbClientPtr cl)
     else
     ;//ret=suinput_release(inputfd,code);
 
-         L("KEY_EVENT--injectKey (%d, %d) ret=%d\n", code , down,ret);    
+         //L("KEY_EVENT--injectKey (%d, %d) ret=%d\n", code , down,ret);    
   }
 }
 
@@ -240,7 +240,7 @@ void ptrEvent(int buttonMask, int x, int y, rfbClientPtr cl)
   
   setIdle(0);
   transformTouchCoordinates(&x,&y,cl->screen->width,cl->screen->height);
-  L("---ptrEvent...buttonMask:%d--X:%d--Y:%d---\n", buttonMask, x, y);
+  //L("---ptrEvent...buttonMask:%d--X:%d--Y:%d---\n", buttonMask, x, y);
 
 
   if((buttonMask & 1)&& leftClicked) {//left btn clicked and moving
@@ -248,9 +248,11 @@ void ptrEvent(int buttonMask, int x, int y, rfbClientPtr cl)
      i=i+1;
          if (i%10==1)//some tweak to not report every move event
           {
+            
             suinput_write(inputfd, EV_ABS, ABS_X, x);
             suinput_write(inputfd, EV_ABS, ABS_Y, y);
             suinput_write(inputfd, EV_SYN, SYN_REPORT, 0);
+            
           }
    }
   else if (buttonMask & 1)//left btn clicked
@@ -275,17 +277,17 @@ void ptrEvent(int buttonMask, int x, int y, rfbClientPtr cl)
 
   if ((buttonMask & 4) && !rightClicked )
   {
-    L("--right btn down--\n");
+    //L("--right btn down--\n");
     rightClicked=1;
     int result = suinput_press(inputfd,KEY_BACK); //back key
-    L("--result: %d \n");
+    //L("--result: %d \n");
   }
   else if (rightClicked)
   {
-    L("--right btn up--\n");
+    //L("--right btn up--\n");
     rightClicked=0;
     int result = suinput_release(inputfd,KEY_BACK);
-    L("--result: %d \n");
+    //L("--result: %d \n");
   }
 
   if (buttonMask & 2)//mid btn clicked
@@ -303,7 +305,7 @@ void ptrEvent(int buttonMask, int x, int y, rfbClientPtr cl)
 
 inline void transformTouchCoordinates(int *x, int *y,int width,int height)
 {
-  L("---transformTouchCoordinates...---\n");
+  //L("---transformTouchCoordinates...---\n");
   int scale=4096.0;
   int old_x=*x,old_y=*y;
   int rotation=0;//getCurrentRotation(); modified for TouchEvent MQ

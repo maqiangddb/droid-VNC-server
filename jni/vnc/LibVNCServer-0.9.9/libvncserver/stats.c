@@ -26,6 +26,9 @@
 
 #include <rfb/rfb.h>
 
+    //added for LOG MQ
+#include <gui.h>
+
 char *messageNameServer2Client(uint32_t type, char *buf, int len);
 char *messageNameClient2Server(uint32_t type, char *buf, int len);
 char *encodingName(uint32_t enc, char *buf, int len);
@@ -243,6 +246,7 @@ void  rfbStatRecordEncodingRcvd(rfbClientPtr cl, uint32_t type, int byteCount, i
 
 void  rfbStatRecordMessageSent(rfbClientPtr cl, uint32_t type, int byteCount, int byteIfRaw)
 {
+    //L("<<<rfbStatRecordMessageSent\n");
     rfbStatList *ptr;
 
     ptr = rfbStatLookupMessage(cl, type);
@@ -252,6 +256,7 @@ void  rfbStatRecordMessageSent(rfbClientPtr cl, uint32_t type, int byteCount, in
         ptr->bytesSent      += byteCount;
         ptr->bytesSentIfRaw += byteIfRaw;
     }
+    //L(">>>rfbStatRecordMessageSent sentCount:%d\n", ptr->sentCount);
 }
 
 void  rfbStatRecordMessageRcvd(rfbClientPtr cl, uint32_t type, int byteCount, int byteIfRaw)
@@ -389,6 +394,7 @@ void rfbPrintStats(rfbClientPtr cl)
     if (cl==NULL) return;
     
     rfbLog("%-21.21s  %-6.6s   %9.9s/%9.9s (%6.6s)\n", "Statistics", "events", "Transmit","RawEquiv","saved");
+    //L("%-21.21s  %-6.6s   %9.9s/%9.9s (%6.6s)\n", "Statistics", "events", "Transmit","RawEquiv","saved");
     for (ptr = cl->statMsgList; ptr!=NULL; ptr=ptr->Next)
     {
         name       = messageNameServer2Client(ptr->type, encBuf, sizeof(encBuf));
@@ -399,9 +405,12 @@ void rfbPrintStats(rfbClientPtr cl)
         savings = 0.0;
         if (bytesIfRaw>0.0)
             savings = 100.0 - (((double)bytes / (double)bytesIfRaw) * 100.0);
-        if ((bytes>0) || (count>0) || (bytesIfRaw>0))
+        if ((bytes>0) || (count>0) || (bytesIfRaw>0)) {
             rfbLog(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
 	        name, count, bytes, bytesIfRaw, savings);
+            //L(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
+            //name, count, bytes, bytesIfRaw, savings);
+        }
         totalRects += count;
         totalBytes += bytes;
         totalBytesIfRaw += bytesIfRaw;
@@ -417,9 +426,12 @@ void rfbPrintStats(rfbClientPtr cl)
 
         if (bytesIfRaw>0.0)
             savings = 100.0 - (((double)bytes / (double)bytesIfRaw) * 100.0);
-        if ((bytes>0) || (count>0) || (bytesIfRaw>0))
+        if ((bytes>0) || (count>0) || (bytesIfRaw>0)) {
             rfbLog(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
 	        name, count, bytes, bytesIfRaw, savings);
+            //L(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
+            //name, count, bytes, bytesIfRaw, savings);
+        }
         totalRects += count;
         totalBytes += bytes;
         totalBytesIfRaw += bytesIfRaw;
@@ -429,12 +441,15 @@ void rfbPrintStats(rfbClientPtr cl)
         savings = 100.0 - ((totalBytes/totalBytesIfRaw)*100.0);
     rfbLog(" %-20.20s: %6d | %9.0f/%9.0f (%5.1f%%)\n",
             "TOTALS", totalRects, totalBytes,totalBytesIfRaw, savings);
+    //L(" %-20.20s: %6d | %9.0f/%9.0f (%5.1f%%)\n",
+     //       "TOTALS", totalRects, totalBytes,totalBytesIfRaw, savings);
 
     totalRects=0.0;
     totalBytes=0.0;
     totalBytesIfRaw=0.0;
 
     rfbLog("%-21.21s  %-6.6s   %9.9s/%9.9s (%6.6s)\n", "Statistics", "events", "Received","RawEquiv","saved");
+    //L("%-21.21s  %-6.6s   %9.9s/%9.9s (%6.6s)\n", "Statistics", "events", "Received","RawEquiv","saved");
     for (ptr = cl->statMsgList; ptr!=NULL; ptr=ptr->Next)
     {
         name       = messageNameClient2Server(ptr->type, encBuf, sizeof(encBuf));
@@ -445,9 +460,12 @@ void rfbPrintStats(rfbClientPtr cl)
 
         if (bytesIfRaw>0.0)
             savings = 100.0 - (((double)bytes / (double)bytesIfRaw) * 100.0);
-        if ((bytes>0) || (count>0) || (bytesIfRaw>0))
+        if ((bytes>0) || (count>0) || (bytesIfRaw>0)) {
             rfbLog(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
 	        name, count, bytes, bytesIfRaw, savings);
+            //L(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
+            //name, count, bytes, bytesIfRaw, savings);
+        }
         totalRects += count;
         totalBytes += bytes;
         totalBytesIfRaw += bytesIfRaw;
@@ -462,9 +480,12 @@ void rfbPrintStats(rfbClientPtr cl)
 
         if (bytesIfRaw>0.0)
             savings = 100.0 - (((double)bytes / (double)bytesIfRaw) * 100.0);
-        if ((bytes>0) || (count>0) || (bytesIfRaw>0))
+        if ((bytes>0) || (count>0) || (bytesIfRaw>0)) {
             rfbLog(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
 	        name, count, bytes, bytesIfRaw, savings);
+            //L(" %-20.20s: %6d | %9d/%9d (%5.1f%%)\n",
+            //name, count, bytes, bytesIfRaw, savings);
+        }
         totalRects += count;
         totalBytes += bytes;
         totalBytesIfRaw += bytesIfRaw;
@@ -474,6 +495,8 @@ void rfbPrintStats(rfbClientPtr cl)
         savings = 100.0 - ((totalBytes/totalBytesIfRaw)*100.0);
     rfbLog(" %-20.20s: %6d | %9.0f/%9.0f (%5.1f%%)\n",
             "TOTALS", totalRects, totalBytes,totalBytesIfRaw, savings);
+    //L(" %-20.20s: %6d | %9.0f/%9.0f (%5.1f%%)\n",
+    //        "TOTALS", totalRects, totalBytes,totalBytesIfRaw, savings);
       
 } 
 

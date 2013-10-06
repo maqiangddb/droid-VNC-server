@@ -40,4 +40,7 @@
     <string name="could_not_start_server">"无法启动服务 :("</string>
     <string name="could_not_stop_server">"无法停止服务 :("</string>
     <string name="close">关闭</string>
+    <string name="no_network_connected">"设备没有连上网络。"</string>
+    <string name="vnc_state">Vnc State</string>
+    <string name="vnc_state_summary">Show VNC state info</string>
 </resources>

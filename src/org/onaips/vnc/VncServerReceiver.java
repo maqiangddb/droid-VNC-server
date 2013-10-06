@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class VncServerReceiver extends BroadcastReceiver
 {
-    private static final String TAG = VncServerReceiver.class.getName();
+    private static final String TAG = MainActivity.VNC_LOG;
 
     public static final String START_VNC_ACTION = "com.samkoon.vnc.START";
     public static final String STOP_VNC_ACTION = "com.samkoon.vnc.STOP";
@@ -22,8 +22,14 @@ public class VncServerReceiver extends BroadcastReceiver
     public static final String KEY_ROTATION = "com.samkoon.vnc.ROTATION";//rotation
     public static final String KEY_SCALE = "com.samkoon.vnc.SCALE";//scale
 
+
+    public static final String REQUST_STATE_ACTION = "com.samkoon.vnc.REQUEST_STATE";
+
+
     public static final String VNC_STATE_CHANGE_ACTION = "com.samkoon.vnc.STATE_CHANGE";
     public static final String EXTRA_STATE = "com.samkoon.vnc.STATE";
+    public static final String EXTRA_IP = "com.samkoon.vnc.IP";
+    public static final String EXTRA_HTTP_PORT = "com.samkoon.vnc.HTTP_PORT";
     public static final int STATE_STARTED = 0;
     public static final int STATE_STOPED = 1;
 
@@ -32,33 +38,6 @@ public class VncServerReceiver extends BroadcastReceiver
     public static final String KEY_HOST = "com.samkoon.vnc.HOST";
     public static final String KEY_CONNECTED = "com.samkoon.vnc.CONNECTED";
 
-    private void showUse(Context context) {
-        Intent send = new Intent(START_VNC_ACTION);
-        Bundle settings = new Bundle();
-        settings.putString(KEY_PORT, "[port]");
-        settings.putString(KEY_PASSWORD, "[password]");
-        send.putExtra(EXTRA_SETTINGS_DATA, settings);
-        context.sendBroadcast(send);
-
-        Intent receive = null;
-        if (receive.getAction().equals(VNC_STATE_CHANGE_ACTION)) {
-            int state = receive.getIntExtra(EXTRA_STATE, STATE_STOPED);
-            switch (state) {
-                case STATE_STARTED:
-                    break;
-                case STATE_STOPED:
-                    break;
-            }
-        }
-
-        if (receive.getAction().equals(VNC_CONNECT_CHANGE_ACTION)) {
-            Bundle data = receive.getBundleExtra(EXTRA_DATA);
-            String host = data.getString(KEY_HOST);
-            boolean connected = data.getBoolean(KEY_CONNECTED);
-        }
-
-    }
-
 	@Override
 	public void onReceive(Context context, Intent intent) 
 	{
@@ -66,8 +45,8 @@ public class VncServerReceiver extends BroadcastReceiver
 
         String action = intent.getAction();
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-			Intent i = new Intent(context,ServerManager.class);
-			context.startService(i);
+			//Intent i = new Intent(context,ServerManager.class);
+			//context.startService(i);
 		}  else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
             checkNetworkInfo(context);
         } else if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
@@ -97,26 +76,55 @@ public class VncServerReceiver extends BroadcastReceiver
         } else if (action.equals(START_VNC_ACTION)) {
             Bundle d = intent.getBundleExtra(EXTRA_SETTINGS_DATA);
             Intent i = new Intent(context.getApplicationContext(), ServerManager.class);
+            i.setAction(START_VNC_ACTION);
             i.putExtra(EXTRA_SETTINGS_DATA, d);
             context.startService(i);
         } else if (action.equals(STOP_VNC_ACTION)) {
             Intent i = new Intent(context.getApplicationContext(), ServerManager.class);
-            context.stopService(i);
+            i.setAction(STOP_VNC_ACTION);
+            context.startService(i);
         } else if (action.equals(VNC_STATE_CHANGE_ACTION)) {
-
+            int state = intent.getIntExtra(EXTRA_STATE, STATE_STOPED);
+            String ip = intent.getStringExtra(EXTRA_IP);
+            String httpPort = intent.getStringExtra(EXTRA_HTTP_PORT);
+            Log.i(TAG, "ip:"+ip+"==http port :"+httpPort);
+            switch (state) {
+                case STATE_STOPED:
+                    Log.i(TAG, "state stoped");
+                    break;
+                case STATE_STARTED:
+                    Log.i(TAG, "state started");
+                    break;
+            }
+        } else if (action.equals(REQUST_STATE_ACTION)) {
+            Intent i = new Intent(context.getApplicationContext(), ServerManager.class);
+            i.setAction(REQUST_STATE_ACTION);
+            checkNetworkInfo(context);
+            context.startService(i);
         }
 	}
 
-    private void checkNetworkInfo(Context context) {
+    private boolean checkNetworkInfo(Context context) {
         Log.i(TAG, "checkNetworkInfo");
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeInfo = manager.getActiveNetworkInfo();
-        Log.i(TAG, "=ActiveInfo:"+activeInfo);
+
         NetworkInfo[] infos = manager.getAllNetworkInfo();
         for (NetworkInfo i : infos) {
             Log.i(TAG, "===info:"+i+"=Available="+i.isAvailable()+"=Connected="+i.isConnected()+"=connectedORConnecting="+i.isConnectedOrConnecting());
-
         }
+
+        NetworkInfo activeInfo = manager.getActiveNetworkInfo();
+        Log.i(TAG, "=ActiveInfo:"+activeInfo);
+        Log.i(TAG, "=ip:"+Util.getIpAddress());
+        if(activeInfo != null) {
+            Intent i = new Intent(MainActivity.UPDATE_STATE_ACTION);
+            Log.i(TAG, ">>>>>>>>>>send broadcast:"+i);
+            context.sendBroadcast(i);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }  

@@ -25,6 +25,16 @@
 
 #include <rfb/rfb.h>
 
+  //added for LOG MQ
+#include <gui.h>
+//added for get ip
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <string.h> 
+#include <sys/ioctl.h> 
+#include <net/if.h>
+//end
+
 #include <ctype.h>
 #ifdef LIBVNCSERVER_HAVE_UNISTD_H
 #include <unistd.h>
@@ -83,6 +93,40 @@ static rfbBool validateString(char *str);
 
 static char buf[BUF_SIZE];
 static size_t buf_filled=0;
+
+//获取IP地址
+ /*
+  * 函数名称 ： char * getip(char *ip_buf)
+  * 函数功能 ： 获取系統IP地址
+  * 参    数 ： 
+  *            char *ip_buf ：用来存放IP地址的内存空间
+  * 返 回 值 ： ip_buf ： 存放IP地址的内存地址
+  */
+ char* 
+ getip(char* ip_buf) 
+ {     
+      L("getip===\n");
+      struct ifreq temp;
+      struct sockaddr_in *myaddr;
+      int fd = 0;
+      int ret = -1;
+      strcpy(temp.ifr_name, "wlan0");
+      if((fd=socket(AF_INET, SOCK_STREAM, 0))<0)
+           {
+           	L("==error 1\n");
+                    return -1;
+            }
+      ret = ioctl(fd, SIOCGIFADDR, &temp);
+      close(fd);
+      if(ret < 0) {
+           	L("==error 2\n");
+               return NULL;
+           }
+      myaddr = (struct sockaddr_in *)&(temp.ifr_addr);
+      strcpy(ip_buf, inet_ntoa(myaddr->sin_addr));
+      return ip_buf; 
+  }
+
 
 /*
  * httpInitSockets sets up the TCP socket to listen for HTTP connections.
@@ -279,7 +323,7 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
    
     cl.sock=rfbScreen->httpSock;
 
-    if (strlen(rfbScreen->httpDir) > 255) {
+    if (strlen(rfbScreen->httpDir) > 255) {//get webclient file path
 	rfbErr("-httpd directory too long\n");
 	httpCloseSock(rfbScreen);
 	return;
@@ -301,7 +345,7 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
 	}
 
 	got = read (rfbScreen->httpSock, buf + buf_filled,
-			    sizeof (buf) - buf_filled - 1);
+			    sizeof (buf) - buf_filled - 1);//read data from socket
 
 	if (got <= 0) {
 	    if (got == 0) {
@@ -392,8 +436,11 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
       rfbLogPerror("httpProcessInput: error in getnameinfo");
     }
     rfbLog("httpd: get '%s' for %s\n", fname+1, host);
+    L("httpd: get '%s' for %s\n", fname+1, host);
 #else
     rfbLog("httpd: get '%s' for %s\n", fname+1,
+	   inet_ntoa(addr.sin_addr));
+    L("httpd: get '%s' for %s\n", fname+1,
 	   inet_ntoa(addr.sin_addr));
 #endif
 
@@ -415,6 +462,10 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
     if (strcmp(fname, "/") == 0) {
 	strcpy(fname, "/index.vnc");
 	rfbLog("httpd: defaulting to '%s'\n", fname+1);
+	L("httpd: defaulting to '%s'\n", fname+1);
+	char buf[16]="";
+	L("My ipaddr=%s \n",getip(buf));
+	//free(buf);
     }
 
     /* Substitutions are performed on files ending .vnc */
@@ -424,7 +475,7 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
     }
 
     /* Open the file */
-
+    L("open file : %s \n", fullFname);
     if ((fd = fopen(fullFname, "r")) == 0) {
         rfbLogPerror("httpProcessInput: open");
         rfbWriteExact(&cl, NOT_FOUND_STR, strlen(NOT_FOUND_STR));
@@ -468,6 +519,11 @@ httpProcessInput(rfbScreenInfoPtr rfbScreen)
 		if (compareAndSkip(&ptr, "$WIDTH")) {
 
 		    sprintf(str, "%d", rfbScreen->width);
+		    rfbWriteExact(&cl, str, strlen(str));
+
+		} else if (compareAndSkip(&ptr, "$IP_ADDR")) {
+		L("$IP_ADDR:%s \n", rfbScreen->ip_addr);//MQ	
+		    sprintf(str, "%s", rfbScreen->ip_addr);
 		    rfbWriteExact(&cl, str, strlen(str));
 
 		} else if (compareAndSkip(&ptr, "$HEIGHT")) {

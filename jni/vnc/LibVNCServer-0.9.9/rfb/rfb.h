@@ -261,6 +261,7 @@ typedef struct _rfbScreenInfo
     rfbColourMap colourMap; /**< set this if rfbServerFormat.trueColour==FALSE */
     const char* desktopName;
     char thisHost[255];
+    char* ip_addr;//Added by MQ
 
     rfbBool autoPort;
     int port;

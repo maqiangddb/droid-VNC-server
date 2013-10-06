@@ -102,5 +102,8 @@ CPU ABI: <xliff:g id="cpu_abi">%s</xliff:g>\n
     <string name="could_not_start_server">"Could not start server :("</string>
     <string name="could_not_stop_server">"Could not stop server :("</string>
     <string name="close">Close</string>
+    <string name="no_network_connected">"Not connected to a network."</string>
+    <string name="vnc_state">Vnc State</string>
+    <string name="vnc_state_summary">Show VNC state info</string>
 
 </resources>

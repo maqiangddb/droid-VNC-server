@@ -1049,8 +1049,8 @@ void rfbInitServer(rfbScreenInfoPtr screen)
   WSADATA trash;
   WSAStartup(MAKEWORD(2,2),&trash);
 #endif
-  rfbInitSockets(screen);
-  rfbHttpInitSockets(screen);
+  rfbInitSockets(screen);//sockets.c
+  rfbHttpInitSockets(screen);//httpd.c
 #ifndef __MINGW32__
   if(screen->ignoreSIGPIPE)
     signal(SIGPIPE,SIG_IGN);
