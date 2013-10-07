@@ -2,3 +2,6 @@ bin
 gen
 libs
 obj
+.idea
+out
+droid-VNC-server.iml
