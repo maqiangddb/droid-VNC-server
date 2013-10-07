@@ -2207,26 +2207,26 @@ fbUpdateRequests = function()
 
 keyEvent = function(keysym, down) 
 {
-    Util.Debug(">> keyEvent, keysym: " + keysym + ", down: " + down);
+    //Util.Debug(">> keyEvent, keysym: " + keysym + ", down: " + down);
     var arr;
     arr = [4];  // msg-type
     arr.push8(down);
     arr.push16(0);
     arr.push32(keysym);
-    Util.Debug("<< keyEvent");
+    //Util.Debug("<< keyEvent");
     return arr;
 };
 
 pointerEvent = function(x, y) 
 {
-    Util.Debug(">> pointerEvent, x,y: " + x + "," + y +
-               " , mask: " + mouse_buttonMask);
+    //Util.Debug(">> pointerEvent, x,y: " + x + "," + y +
+     //          " , mask: " + mouse_buttonMask);
     var arr;
     arr = [5];  // msg-type
     arr.push8(mouse_buttonMask);
     arr.push16(x);
     arr.push16(y);
-    Util.Debug("<< pointerEvent");
+    //Util.Debug("<< pointerEvent");
     return arr;
 };
 
@@ -2306,10 +2306,10 @@ that.sendKey = function(code, down)
     if (rfb_state !== "normal" || conf.view_only) { return false; }
     var arr = [];
     if (typeof down !== 'undefined') {
-        Util.Info("Sending key code (" + (down ? "down" : "up") + "): " + code);
+        //Util.Info("Sending key code (" + (down ? "down" : "up") + "): " + code);
         arr = arr.concat(keyEvent(code, down ? 1 : 0));
     } else {
-        Util.Info("Sending key code (down + up): " + code);
+        //Util.Info("Sending key code (down + up): " + code);
         arr = arr.concat(keyEvent(code, 1));
         arr = arr.concat(keyEvent(code, 0));
     }
