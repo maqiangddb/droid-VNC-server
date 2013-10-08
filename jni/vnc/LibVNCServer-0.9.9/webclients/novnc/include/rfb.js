@@ -1496,12 +1496,12 @@ function transformPixel(pixel) {
 }
 
 function readBufferData(count, zrleInStream) {
-    Util.Debug("<<<<<<<<readBufferData--count:"+count+zrleInStream.debugBuf());
+    //Util.Debug("<<<<<<<<readBufferData--count:"+count+zrleInStream.debugBuf());
     var result = [];
     if (colorDepth == 24) {
 
             var data = zrleInStream.readData(count*3); //ws.rQshiftBytes(count*3);
-            ptr += count*3;
+            //ptr += count*3;
 
             for (var i = 0; i < count; i++) {
                 result[i] = (data[i*3+2] & 0xFF) << 16 |
@@ -1526,7 +1526,7 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                     //readZrleRawPixels(tw, th);
                     zrleTilePixels = readBufferData(tw*th, zrleInStream);
                 } else {
-                    Util.Debug("readZrlePackedPixels-"+zrleInStream.debugBuf());
+                    Util.Debug("readZrlePackedPixels-"+zrleInStream.toString());
                     //fail("readZrlePackedPixels");
                     //readZrlePackedPixels();
                     var bppp = ((palSize > 16) ? 8 :
@@ -1554,9 +1554,8 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                 }
             } else {
                 if (palSize == 0) {
-                    Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.debugBuf());
-                    //fail("readZrlePlainRLEPixels");
-                    //readZrlePlainRLEPixels(tw, th);
+                    Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.toString());
+
                     var ptr = 0;
                     var end = +ptr + (+(tw * th));
                     while (ptr < end) {
@@ -1574,30 +1573,30 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                         if (!(len <= +end - ptr)) {
                             fail("ZRLE decoder: assertion failed1 (len <= end-ptr)");
                         };
-
+                        //Util.Debug("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr+1)+"-pix:"+pix);
                         while (len-- > 0) zrleTilePixels[ptr++] = pix;
 
                     }
                 } else {
-                    //readZrlePackedRLEPixels(tw, th, palette);
-                    Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.debugBuf());
-                    //fail("readZrlePackedRLEPixels");
+
+                    Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.toString());
+
                     var ptr = 0;
                     var end = ptr + tw * th;
-                    //Util.Debug("------end:"+end);
+
                     while (ptr < end) {
-                        //Util.Debug("-----ptr:"+ptr);
+
                         var index = zrleInStream.readData(1); //ws.rQshift8();
-                        //Util.Debug("-----index:"+index);
+
                         var len = 1;
                         if ((index & 128) != 0) {
                             var b;
                             do {
 
                                 b = zrleInStream.readData(1); //ws.rQshift8();
-                                //Util.Debug("-----b:"+b);
+
                                 len += (+b);
-                                //Util.Debug("----len:"+len);
+
                             } while (b == 255);
 
                             if (!(len <= end - ptr)) {
@@ -1628,11 +1627,17 @@ function ZrleInStream (data, tiles_x, tiles_y, tiles, total_tiles) {
 
      this.readData = readData;
      function readData(num) {
+        //Util.Debug("<<<<readData--ptr"+this.ptr);
+
         if ((this.ptr+num) > this.buffer.length )  {
             fail("ZRLE encoder fail: (ptr+num) > buffer.length");
         };
+
         this.ptr += num
-        return this.buffer.slice(this.ptr-num, this.ptr);
+        var data = this.buffer.slice(this.ptr-num, this.ptr);
+        //Util.Debug("----"+data);
+        //Util.Debug(">>>>--ptr:"+this.ptr);
+        return data;
         // body...
     }
 
@@ -1651,13 +1656,13 @@ function ZrleInStream (data, tiles_x, tiles_y, tiles, total_tiles) {
 
     this.debugBuf = debugBuf;
     function debugBuf() {
-        return ("["+this.buffer.slice(this.ptr, this.ptr + 20)+"]");
+        return ("ptr:"+this.ptr+"["+this.buffer.slice(this.ptr, this.ptr + 20)+"]");
     }
 
     this.toString = toString;
     function toString () {
-        return ("---ptr:" + this.ptr + "data:" + this.buffer.slice(this.ptr, this.ptr + 20) + "\n"
-            + "cur_tile:"+this.cur_tile + "-tiles:"+this.tiles+"-total_tiles:"+this.total_tiles);
+        return ("toString---ptr:" + this.ptr + " data:" + this.buffer.slice(this.ptr, this.ptr + 20) + "\n"
+            + "cur_tile:"+this.cur_tile + "-tiles_x:"+this.tiles_x + "-tiles_y:"+this.tiles_y + "-tiles:"+this.tiles+"-total_tiles:"+this.total_tiles);
         // body...
     }
 
@@ -1671,16 +1676,26 @@ encHandlers.ZRLE = function ()
     FBU.bytes = 4;
     if (ws.rQwait("ZRLE data length bytes", FBU.bytes)) { return false; }//read data length
     nBytes = ws.rQshift32();
+    Util.Debug("------get nBytes:"+nBytes);
     FBU.bytes = nBytes;
-    if (ws.rQwait("ZRLE real data", FBU.bytes)) { return false; }
-    Util.Debug("---nBytes:"+nBytes);
-    var data = ws.rQshiftBytes(nBytes);
-    FBU.zlib_zrle.reset();
-    var uncompress = FBU.zlib_zrle.uncompress(ws.rQshiftBytes(nBytes), 0);
-    if (uncompress.status !== 0) {
-            fail("Invalid data in zlib stream");
+    if (ws.rQwait("ZRLE real data", FBU.bytes)) { 
+        var d1 = nBytes & 255;
+        var d2 = (nBytes >> 8) & 255;
+        var d3 = (nBytes >> 16) & 255;
+        var d4 = (nBytes >> 24) & 255;
+        Util.Debug("----wait...["+d4+","+d3+","+d2+","+d1+"]");
+        ws.rQunshift8(d1);// for nBytes
+        ws.rQunshift8(d2);
+        ws.rQunshift8(d3);
+        ws.rQunshift8(d4);
+        return false; 
     }
-    Util.Debug("--"+uncompress.data.slice(0, 20));
+    var data = ws.rQshiftBytes(nBytes);
+    //FBU.zlib_zrle.reset();
+    var uncompress = FBU.zlib_zrle.uncompress(data, 0);
+    if (uncompress.status !== 0) {
+            fail("uncompress failed!");
+    }
 
         var tiles_x = Math.ceil(FBU.width/64);
         var tiles_y = Math.ceil(FBU.height/64);
@@ -1693,20 +1708,39 @@ encHandlers.ZRLE = function ()
     while (zrleInStream.tiles > 0) {
 
         zrleInStream.cur_tile = zrleInStream.total_tiles - zrleInStream.tiles;
-        tile_x = zrleInStream.cur_tile % zrleInStream.tiles_x;
-        tile_y = Math.floor(zrleInStream.cur_tile / zrleInStream.tiles_y);
+        Util.Debug("=====================================")
+        Util.Debug("["+
+            (+zrleInStream.cur_tile) % (+zrleInStream.tiles_x)
+            +","+
+            (+zrleInStream.cur_tile) % (+zrleInStream.tiles_y)
+            +","+
+            (+zrleInStream.cur_tile) / (+zrleInStream.tiles_x)
+            +","+
+            (+zrleInStream.cur_tile) / (+zrleInStream.tiles_y)
+            +"]"
+            );
+        Util.Debug("["+
+            Math.floor((+zrleInStream.cur_tile) / (+zrleInStream.tiles_x))
+            +","+
+            Math.floor((+zrleInStream.cur_tile) % (+zrleInStream.tiles_x))
+            +"]"
+            );
+        var tile_x = (+zrleInStream.cur_tile) % (+zrleInStream.tiles_x);
+        var tile_y = Math.floor((+zrleInStream.cur_tile) / (+zrleInStream.tiles_x));
+        Util.Debug("MQ-tile_x:"+tile_x+"-tile_y:"+tile_y+
+            "-cur_tile:"+zrleInStream.cur_tile+"-tiles_x:"+zrleInStream.tiles_x+"-tiles_y:"+zrleInStream.tiles_y);
         tx = FBU.x + tile_x *64;
         ty = FBU.y + tile_y * 64;
         tw = Math.min(64, (FBU.x + FBU.width) - tx);
         th = Math.min(64, (FBU.y + FBU.height) - ty);
-        Util.Debug(zrleInStream.toString())
 
             var mode = zrleInStream.readData(1); //ws.rQshift8();//read mode
             var rle = (mode & 128) != 0;
             var palSize = mode & 127;
             var palette = [];
             
-            //alert("----["+tx+","+ty+","+tw+","+th+"]"+"---mode:"+mode+"-rle:"+rle+"-palSize:"+palSize);
+            
+            
             
             palette = readBufferData(palSize, zrleInStream);
             Util.Debug("--palette:"+palette);
@@ -1729,6 +1763,7 @@ encHandlers.ZRLE = function ()
             'height': th});
         zrleTilePixels = [];
         zrleInStream.tiles -=1;
+        Util.Debug("=====================================")
     }
 
     if (zrleInStream.tiles == 0) {

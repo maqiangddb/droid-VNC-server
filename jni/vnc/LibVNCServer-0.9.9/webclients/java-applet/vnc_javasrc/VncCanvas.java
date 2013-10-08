@@ -1016,6 +1016,7 @@ class VncCanvas extends Canvas
       int p1 = is.readU8();
       int p2 = is.readU8();
       int p3 = is.readU8();
+      System.out.println("readPixel--["+p1+","+p2+","+p3+"]");
       pix = (p3 & 0xFF) << 16 | (p2 & 0xFF) << 8 | (p1 & 0xFF);
     }
     return pix;
@@ -1096,6 +1097,7 @@ class VncCanvas extends Canvas
         throw new Exception("ZRLE decoder: assertion failed" +
                             " (len <= end-ptr)");
 
+        System.out.println("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr + 1)+"-pix:"+pix);
       if (bytesPixel == 1) {
         while (len-- > 0) zrleTilePixels8[ptr++] = (byte)pix;
       } else {
