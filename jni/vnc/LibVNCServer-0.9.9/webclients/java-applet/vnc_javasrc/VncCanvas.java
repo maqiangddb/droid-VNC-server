@@ -913,14 +913,26 @@ class VncCanvas extends Canvas
     }
   }
 
-    static void DebugBuf(byte[] buf) {
-        System.out.println("========");
+    static void DebugBuf(int[] buf) {
+        System.out.println("--------------------------------------------");
         for (int i=0; i<20; i++) {
 
             System.out.print("["+buf[i]+"]");
 
         }
-        System.out.println("========");
+        System.out.println("");
+        System.out.println("--------------------------------------------");
+    }
+
+    private void DebugBuf(byte[] buf) {
+        System.out.println("--------------------------------------------");
+        for (int i=0; i<20; i++) {
+
+            System.out.print("["+buf[i]+"]");
+
+        }
+        System.out.println("");
+        System.out.println("--------------------------------------------");
     }
 
   //
@@ -959,6 +971,9 @@ class VncCanvas extends Canvas
     }
 
     zrleInStream.setUnderlying(new MemInStream(zrleBuf, 0, nBytes), nBytes);
+    System.out.println("first data-------------");
+    zrleInStream.check(20);
+    DebugBuf(zrleInStream.getbuf());
 
 
     for (int ty = y; ty < y+h; ty += 64) {
@@ -977,6 +992,7 @@ class VncCanvas extends Canvas
         readZrlePalette(palette, palSize);
 
         if (palSize == 1) {
+            //System.out.println("palSize == 1");
           int pix = palette[0];
           Color c = (bytesPixel == 1) ?
             colors[pix] : new Color(0xFF000000 | pix);
@@ -988,16 +1004,26 @@ class VncCanvas extends Canvas
 
         if (!rle) {
           if (palSize == 0) {
+              //System.out.println("readZrleRawPixels");
             readZrleRawPixels(tw, th);
           } else {
+              //System.out.println("readZrlePackedPixels");
             readZrlePackedPixels(tw, th, palette, palSize);
           }
         } else {
           if (palSize == 0) {
+              //System.out.println("readZrlePlainRLEPixels");
             readZrlePlainRLEPixels(tw, th);
           } else {
+            //System.out.println("readZrlePackedRLEPixels");
             readZrlePackedRLEPixels(tw, th, palette);
           }
+        }
+        System.out.println("["+tx+","+ty+","+tw+","+th+"]");
+        if (bytesPixel == 1) {
+            DebugBuf(zrleTilePixels8);
+        } else {
+            DebugBuf(zrleTilePixels24);
         }
         handleUpdatedZrleTile(tx, ty, tw, th);
       }
@@ -1008,7 +1034,9 @@ class VncCanvas extends Canvas
     scheduleRepaint(x, y, w, h);
   }
 
-  int readPixel(InStream is) throws Exception {
+
+
+    int readPixel(InStream is) throws Exception {
     int pix;
     if (bytesPixel == 1) {
       pix = is.readU8();
@@ -1016,7 +1044,7 @@ class VncCanvas extends Canvas
       int p1 = is.readU8();
       int p2 = is.readU8();
       int p3 = is.readU8();
-      System.out.println("readPixel--["+p1+","+p2+","+p3+"]");
+      //System.out.println("readPixel--["+p1+","+p2+","+p3+"]");
       pix = (p3 & 0xFF) << 16 | (p2 & 0xFF) << 8 | (p1 & 0xFF);
     }
     return pix;
@@ -1097,7 +1125,7 @@ class VncCanvas extends Canvas
         throw new Exception("ZRLE decoder: assertion failed" +
                             " (len <= end-ptr)");
 
-        System.out.println("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr + 1)+"-pix:"+pix);
+        //System.out.println("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr + 1)+"-pix:"+pix);
       if (bytesPixel == 1) {
         while (len-- > 0) zrleTilePixels8[ptr++] = (byte)pix;
       } else {

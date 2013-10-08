@@ -90,9 +90,9 @@ public class ZlibInStream extends InStream {
       if (inflater.needsInput()) {
         inflater.setInput(underlying.getbuf(), underlying.getptr(), avail_in);
       }
-    System.out.println("decompress----bufSize:"+bufSize+"-end:"+end+"--underlying.lenght:"+underlying.getbuf().length);
+    //System.out.println("decompress----bufSize:"+bufSize+"-end:"+end+"--underlying.lenght:"+underlying.getbuf().length);
       int n = inflater.inflate(b, end, bufSize - end);
-     System.out.println("decompress---n:"+n+"--underlying.lenght:"+underlying.getbuf().length);
+     //System.out.println("decompress---n:"+n+"--underlying.lenght:"+underlying.getbuf().length);
 
       end += n;
       if (inflater.needsInput()) {
