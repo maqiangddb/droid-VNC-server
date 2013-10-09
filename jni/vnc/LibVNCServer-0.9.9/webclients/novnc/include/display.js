@@ -557,6 +557,35 @@ cmapImageData = function(x, y, vx, vy, width, height, arr, offset) {
     c_ctx.putImageData(img, x - vx, y - vy);
 };
 
+that.zrleImage = function(x, y, width, height, arr, offset) {
+    Util.Debug("<<<<<<<<<<<<zrleImage");
+    var img, i, j, data;
+    /*
+    if ((x - v.x >= v.w) || (y - v.y >= v.h) ||
+        (x - v.x + width < 0) || (y - v.y + height < 0)) {
+        // Skipping because outside of viewport
+        return;
+    }
+    */
+    img = c_ctx.createImageData(width, height);
+    data = img.data;
+    for (i=0; i < (width * height); i++) {
+        //data[i    ] = arr[j + 2];
+        //data[i + 1] = arr[j + 1];
+        //data[i + 2] = arr[j    ];
+        //data[i + 3] = 255; // Set Alpha
+        for (j = 0; j < 4; j++) {
+            if (j == 3) {
+                data[i*4 + 3] = 255;
+            } else {
+                data[i*4 + j] = (arr[i] >> (3-i)*8) & 255;
+            }
+        };
+    }
+    c_ctx.putImageData(img, x - viewport.x, y - viewport.y);
+    Util.Debug("<<<<<<<<<<<<<<zrleImage");
+}
+
 that.blitImage = function(x, y, width, height, arr, offset) {
     if (conf.true_color) {
         bgrxImageData(x, y, viewport.x, viewport.y, width, height, arr, offset);
@@ -622,6 +651,9 @@ scan_renderQ = function() {
                     // to keep things in-order
                     ready = false;
                 }
+                break;
+            case 'zrle':
+                that.zrleImage(a.x, a.y, a.width, a.height, a.data, 0)
                 break;
         }
         if (ready) {

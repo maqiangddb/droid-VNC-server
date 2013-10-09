@@ -613,7 +613,7 @@ this.reset = function()
 /* inflate stream from source to dest */
 this.uncompress = function(source, offset)
 {
-
+  //Util.Debug("<<<<<<<<<<<<<<<<<<<<uncompress");
    var d = this.d;
    var bfinal;
 
@@ -669,7 +669,7 @@ this.uncompress = function(source, offset)
    } while (!bfinal && d.sourceIndex < d.source.length);
 
    d.history = d.history.slice(-this.WINDOW_SIZE);
-   
+   //Util.Debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>uncompressed");
    return { 'status' : this.OK, 'data' : d.dest };
 }
 

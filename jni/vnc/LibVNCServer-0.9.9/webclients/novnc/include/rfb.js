@@ -117,7 +117,8 @@ var that           = {},  // Public API methods
         subencoding    : -1,
         background     : null,
         zlibs          : [],   // TIGHT zlib streams
-        zlib_zrle       : null //Zrle zlib stream
+        zlib_zrle       : null, //Zrle zlib stream
+        zrleInStream     : null
     },
 
     fb_Bpp         = 4,
@@ -1212,7 +1213,7 @@ framebufferUpdate = function() {
         }
 
         timing.last_fbu = (new Date()).getTime();
-        Util.Debug("--"+FBU.encoding+"----"+ws.rQslice(0, 20))
+        //Util.Debug("--"+FBU.encoding+"----"+ws.rQslice(0, 20))
         ret = encHandlers[FBU.encoding]();
 
         now = (new Date()).getTime();
@@ -1482,7 +1483,7 @@ encHandlers.HEXTILE = function display_hextile() {
 };
 
 function transformPixel(pixel) {
-    Util.Debug("<<<transformPixel:--"+pixel);
+    //Util.Debug("<<<transformPixel:--"+pixel);
     var result = 0;
     for (var i = 0; i < colorDepth; i++) {
         var item = pixel >> (colorDepth - i - 1) & 1;
@@ -1491,7 +1492,7 @@ function transformPixel(pixel) {
         };
         result += item << (colorDepth - i - 1) * zrlePixFactor;
     };
-    Util.Debug(">>>transformPixel:--"+result);
+    //Util.Debug(">>>transformPixel:--"+result);
     return result;
 }
 
@@ -1520,15 +1521,15 @@ function readBufferData(count, zrleInStream) {
 }
 
 function HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream) {
-Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize:"+palSize);
+//Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize:"+palSize);
             if (!rle) {
                 if (palSize == 0) {
-                    //readZrleRawPixels(tw, th);
+                    //Util.Debug("readZrleRawPixels-"+zrleInStream.toString());
+
                     zrleTilePixels = readBufferData(tw*th, zrleInStream);
                 } else {
-                    Util.Debug("readZrlePackedPixels-"+zrleInStream.toString());
-                    //fail("readZrlePackedPixels");
-                    //readZrlePackedPixels();
+                    //Util.Debug("readZrlePackedPixels-"+zrleInStream.toString());
+
                     var bppp = ((palSize > 16) ? 8 :
                                         ((palSize > 4) ? 4 :
                                         ((palSize > 2) ? 2 : 1)));
@@ -1549,12 +1550,16 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                             nbits -= (+bppp);
                             var index = (b >> nbits) & ((1 << bppp) - 1) & 127;
                             zrleTilePixels[ptr++] = palette[index];
+                            //var j = ptr++;
+                            //for (var i = 0; i < 3; i++) {
+                            //    zrleTilePixels[j*3 + i] = ( palette[index] >> (2 - i) * 8 ) & 255;
+                            //};
                         }
                     };
                 }
             } else {
                 if (palSize == 0) {
-                    Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.toString());
+                    //Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.toString());
 
                     var ptr = 0;
                     var end = +ptr + (+(tw * th));
@@ -1574,12 +1579,18 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                             fail("ZRLE decoder: assertion failed1 (len <= end-ptr)");
                         };
                         //Util.Debug("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr+1)+"-pix:"+pix);
-                        while (len-- > 0) zrleTilePixels[ptr++] = pix;
+                        while (len-- > 0) { 
+                            zrleTilePixels[ptr++] = pix;
+                            //var j = ptr++;
+                            //for (var i = 0; i < 3; i++) {
+                            //    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
+                            //};
+                        }
 
                     }
                 } else {
 
-                    Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.toString());
+                    //Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.toString());
 
                     var ptr = 0;
                     var end = ptr + tw * th;
@@ -1605,7 +1616,13 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
                         };
                         index &= 127;
                         var pix = palette[index];
-                        while (len-- > 0) zrleTilePixels[ptr++] = pix;
+                        while (len-- > 0) {
+                            zrleTilePixels[ptr++] = pix;
+                            //var j = ptr++;
+                            //for (var i = 0; i < 3; i++) {
+                            //    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
+                            //};
+                        }
                     }
                     //======================================================
 
@@ -1614,31 +1631,45 @@ Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize
 
         }//handle data
 
-function ZrleInStream (data, tiles_x, tiles_y, tiles, total_tiles) {
+function ZrleInStream (data, tiles_x, tiles_y, tiles, total_tiles, ptr) {
      this.buffer = data;
-      this.ptr = 0; 
+      this.ptr = ptr; 
       this.tiles_x = tiles_x; 
       this.tiles_y = tiles_y; 
       this.tiles = tiles; 
       this.total_tiles = total_tiles; 
       this.cur_tile = 0;
 
-
-
      this.readData = readData;
      function readData(num) {
         //Util.Debug("<<<<readData--ptr"+this.ptr);
 
         if ((this.ptr+num) > this.buffer.length )  {
-            fail("ZRLE encoder fail: (ptr+num) > buffer.length");
+            fail("ZRLE in Stream readData fail: (ptr+num) > buffer.length--length:"+this.buffer.length + "--ptr:"+ this.ptr +"--num:"+num);
         };
 
         this.ptr += num
         var data = this.buffer.slice(this.ptr-num, this.ptr);
+        //this.reset();
         //Util.Debug("----"+data);
         //Util.Debug(">>>>--ptr:"+this.ptr);
         return data;
         // body...
+    }
+
+    this.reset = reset;
+    function reset() {
+        //Util.Debug("<<<<<<<<reset--["+this.ptr+","+this.buffer.length+"]");
+        this.buffer = this.buffer.slice(this.ptr, this.buffer.length);
+        this.ptr = 0;
+        //Util.Debug(">>>>>>>>reset--["+this.ptr+","+this.buffer.length+"]");
+    }
+
+    this.addData = addData;
+    function addData(data) {
+        for (var i = 0; i < data.length; i++) {
+            this.buffer.push(data[i]);
+        };
     }
 
     function setTiles(tiles) {
@@ -1656,94 +1687,115 @@ function ZrleInStream (data, tiles_x, tiles_y, tiles, total_tiles) {
 
     this.debugBuf = debugBuf;
     function debugBuf() {
-        return ("ptr:"+this.ptr+"["+this.buffer.slice(this.ptr, this.ptr + 20)+"]");
+        //return ("ptr:"+this.ptr+"["+this.buffer.slice(this.ptr, this.ptr + 20)+"]");
+        return ("toString---ptr:" + this.ptr + "--length:"+this.buffer.length + " data:" + this.buffer.slice(this.ptr, this.ptr + 20) + "\n"
+            + "cur_tile:"+this.cur_tile + "-tiles_x:"+this.tiles_x + "-tiles_y:"+this.tiles_y + "-tiles:"+this.tiles+"-total_tiles:"+this.total_tiles);
     }
 
     this.toString = toString;
     function toString () {
-        return ("toString---ptr:" + this.ptr + " data:" + this.buffer.slice(this.ptr, this.ptr + 20) + "\n"
-            + "cur_tile:"+this.cur_tile + "-tiles_x:"+this.tiles_x + "-tiles_y:"+this.tiles_y + "-tiles:"+this.tiles+"-total_tiles:"+this.total_tiles);
+        //return ("toString---ptr:" + this.ptr + "--length:"+this.buffer.length + " data:" + this.buffer.slice(this.ptr, this.ptr + 20) + "\n"
+        //    + "cur_tile:"+this.cur_tile + "-tiles_x:"+this.tiles_x + "-tiles_y:"+this.tiles_y + "-tiles:"+this.tiles+"-total_tiles:"+this.total_tiles);
+        return "";
         // body...
     }
 
 }
 
+function seeData(data) {
+
+    Util.Debug("---------------------------------------------");
+    if (data.length > 40) {
+    Util.Debug("["+data.slice(0, 20)+"]");
+    Util.Debug("["+data.slice(data.length-20, data.length)+"]");
+    } else {
+        Util.Debug("["+data.slice(0, data.length)+"]");
+    }
+    Util.Debug("---------------------------------------------");
+}
+
+function tranToRGB(data) {
+    var dst = [];
+    for (var i = 0; i < data.length; i++) {
+        for (var j = 0; j < 3; i++) {
+            dst[i*3 - j] = ( data[i]>> (2 - i) * 8 ) & 255;
+        };
+    };
+    return dst;
+}
+
 encHandlers.ZRLE = function () 
 {
-    Util.Debug("<<<<<<<<<<<<<<<<<<<<encHandlers.ZRLE--["+ws.rQslice(0, 10)+"]");
+    //Util.Debug("<<<<<<<<<<<<<<<<<<<<encHandlers.ZRLE--["+ws.rQslice(0, 10)+"]");
     var nBytes, tx, ty, tw, th;
-    var zrleInStream;
     FBU.bytes = 4;
     if (ws.rQwait("ZRLE data length bytes", FBU.bytes)) { return false; }//read data length
     nBytes = ws.rQshift32();
-    Util.Debug("------get nBytes:"+nBytes);
+    
     FBU.bytes = nBytes;
     if (ws.rQwait("ZRLE real data", FBU.bytes)) { 
         var d1 = nBytes & 255;
         var d2 = (nBytes >> 8) & 255;
         var d3 = (nBytes >> 16) & 255;
         var d4 = (nBytes >> 24) & 255;
-        Util.Debug("----wait...["+d4+","+d3+","+d2+","+d1+"]");
+        //Util.Debug("----wait...["+d4+","+d3+","+d2+","+d1+"]");
         ws.rQunshift8(d1);// for nBytes
         ws.rQunshift8(d2);
         ws.rQunshift8(d3);
         ws.rQunshift8(d4);
         return false; 
     }
+
+    Util.Debug("MQ-------------nBytes:"+nBytes);
+
     var data = ws.rQshiftBytes(nBytes);
+    //seeData(data);
     //FBU.zlib_zrle.reset();
     var uncompress = FBU.zlib_zrle.uncompress(data, 0);
     if (uncompress.status !== 0) {
             fail("uncompress failed!");
     }
+    //seeData(uncompress.data);
+    if (false) {
+        Util.Debug("length:"+data.length+"["+data+"]");
+        Util.Debug("length:"+uncompress.data.length+"["+uncompress.data+"]");
+    };
 
-        var tiles_x = Math.ceil(FBU.width/64);
-        var tiles_y = Math.ceil(FBU.height/64);
-        var total_tiles = tiles_x * tiles_y;
-        var tiles = total_tiles;
+     var tiles_x = Math.ceil(FBU.width/64);
+     var tiles_y = Math.ceil(FBU.height/64);
+     var total_tiles = tiles_x * tiles_y;
+     var tiles = total_tiles;
 
-        zrleInStream = new ZrleInStream(uncompress.data, tiles_x, tiles_y, tiles, total_tiles);
-        Util.Debug("---"+zrleInStream.toString());
+     if (FBU.zrleInStream === null) {
+         //Util.Debug("zrleInStream is null , so init one!-----");
+         FBU.zrleInStream = new ZrleInStream(uncompress.data, tiles_x, tiles_y, tiles, total_tiles, 0);
+     } else {
+         FBU.zrleInStream.addData(uncompress.data);
+     };
+        
+     //Util.Debug("---"+FBU.zrleInStream.debugBuf());
 
-    while (zrleInStream.tiles > 0) {
+    while (FBU.zrleInStream.tiles > 0) {
 
-        zrleInStream.cur_tile = zrleInStream.total_tiles - zrleInStream.tiles;
-        Util.Debug("=====================================")
-        Util.Debug("["+
-            (+zrleInStream.cur_tile) % (+zrleInStream.tiles_x)
-            +","+
-            (+zrleInStream.cur_tile) % (+zrleInStream.tiles_y)
-            +","+
-            (+zrleInStream.cur_tile) / (+zrleInStream.tiles_x)
-            +","+
-            (+zrleInStream.cur_tile) / (+zrleInStream.tiles_y)
-            +"]"
-            );
-        Util.Debug("["+
-            Math.floor((+zrleInStream.cur_tile) / (+zrleInStream.tiles_x))
-            +","+
-            Math.floor((+zrleInStream.cur_tile) % (+zrleInStream.tiles_x))
-            +"]"
-            );
-        var tile_x = (+zrleInStream.cur_tile) % (+zrleInStream.tiles_x);
-        var tile_y = Math.floor((+zrleInStream.cur_tile) / (+zrleInStream.tiles_x));
-        Util.Debug("MQ-tile_x:"+tile_x+"-tile_y:"+tile_y+
-            "-cur_tile:"+zrleInStream.cur_tile+"-tiles_x:"+zrleInStream.tiles_x+"-tiles_y:"+zrleInStream.tiles_y);
+        FBU.zrleInStream.cur_tile = FBU.zrleInStream.total_tiles - FBU.zrleInStream.tiles;
+        //Util.Debug("=====================================")
+
+        var tile_x = (+FBU.zrleInStream.cur_tile) % (+FBU.zrleInStream.tiles_x);
+        var tile_y = Math.floor((+FBU.zrleInStream.cur_tile) / (+FBU.zrleInStream.tiles_x));
+        //Util.Debug("MQ-----["+tile_x+","+tile_y+
+        //    "]-cur_tile:"+FBU.zrleInStream.cur_tile);
         tx = FBU.x + tile_x *64;
-        ty = FBU.y + tile_y * 64;
+        ty = FBU.y + tile_y *64;
         tw = Math.min(64, (FBU.x + FBU.width) - tx);
         th = Math.min(64, (FBU.y + FBU.height) - ty);
 
-            var mode = zrleInStream.readData(1); //ws.rQshift8();//read mode
+            var mode = FBU.zrleInStream.readData(1); //ws.rQshift8();//read mode
             var rle = (mode & 128) != 0;
             var palSize = mode & 127;
             var palette = [];
             
-            
-            
-            
-            palette = readBufferData(palSize, zrleInStream);
-            Util.Debug("--palette:"+palette);
+            palette = readBufferData(palSize, FBU.zrleInStream);
+            //Util.Debug("--palette:"+palette);
 
             if (palSize == 1) {
                 var color = palette[0];
@@ -1752,23 +1804,32 @@ encHandlers.ZRLE = function ()
                 continue;
             };
 
-        HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream);
+        HandleData(tx, ty, tw, th, rle, palSize, palette, FBU.zrleInStream);
+
+
+        //Util.Debug("["+tx+","+ty+","+tw+","+th+"]")
+        //seeData(zrleTilePixels);
+        //Util.Debug("--------------------------------------------")
+        //Util.Debug(""+zrleTilePixels.slice(0, 20));
+        //Util.Debug("--------------------------------------------")
+        //var result = tranToRGB(zrleTilePixels);
 
         display.renderQ_push({
-            'type': 'blitRgb',
+            'type': 'zrle',
             'data': zrleTilePixels,
             'x': tx,
             'y': ty,
             'width': tw,
             'height': th});
         zrleTilePixels = [];
-        zrleInStream.tiles -=1;
-        Util.Debug("=====================================")
+        FBU.zrleInStream.tiles -=1;
+        //Util.Debug("=====================================")
     }
 
-    if (zrleInStream.tiles == 0) {
+    if (FBU.zrleInStream.tiles == 0) {
+       //Util.Debug("---"+FBU.zrleInStream.debugBuf());
+        FBU.zrleInStream = null;
         FBU.bytes = 0;
-        zrleInStream = null;
         FBU.rects -= 1;
     }
     return true;
