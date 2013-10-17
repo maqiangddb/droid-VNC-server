@@ -269,12 +269,14 @@ void close_app()
 { 	
   L("Cleaning up...\n");
 
+  sendServerStopped();
+  unbindIPCserver();
       
-      if(client != NULL) {
-        L("  disconnect clients:\n");
-        rfbCloseClient(client);
-        rfbClientConnectionGone(client);
-      }
+  if(client != NULL) {
+    L("  disconnect clients:\n");
+    rfbCloseClient(client);
+    rfbClientConnectionGone(client);
+  }
 
 
   if (method == FRAMEBUFFER)
@@ -287,8 +289,7 @@ void close_app()
     closeFlinger();
   
   cleanupInput();
-  sendServerStopped();
-  unbindIPCserver();
+
   exit(0); /* normal exit status */
 }
 
@@ -477,8 +478,12 @@ int main(int argc, char **argv)
 
     initVncServer(argc, argv);
 
-    bindIPCserver();
-    sendServerStarted();
+    if (bindIPCserver() == 0) {
+      sendServerStarted();
+    } else {
+      sendServerStarted();
+    }
+    
 
     if (rhost) {// for reverse connection
       rfbClientPtr cl;

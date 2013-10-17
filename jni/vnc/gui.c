@@ -79,8 +79,8 @@ int bindIPCserver()
   {
     L("\nCould not connect to IPC gui, another daemon already running?\n");
     sendMsgToGui("~SHOW|Could not connect to IPC gui, another daemon already running?\n");
-
-    exit(-1);
+    return 0;
+    //exit(-1);
   }
 
 
@@ -109,14 +109,23 @@ void *handle_connections()
 
     if (strstr(pBuffer,"~PING|")!=NULL)
     {
+      L("\n------~PING-------------\n");
       char *resp="~PONG|";
       n = sendto(hServerSocket,resp,strlen(resp),
                  0,(struct sockaddr *)&from,fromlen);
       if (n  < 0) perror("sendto");
     }
-    else if (strstr(pBuffer,"~KILL|")!=NULL)
+  else if (strstr(pBuffer,"~KILL|")!=NULL) {
+    L("\n------~KILL-------------\n");
     close_app();
+    }
   }
+}
+
+void resetIPCserver() {
+  L("--resetIPCserver");
+  unbindIPCserver();
+  bindIPCserver();
 }
 
 
