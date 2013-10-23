@@ -43,14 +43,18 @@ var that           = {},  // Public API methods
     Thousends = 3,
     Millions = 4,
 
-        PIXEL_FORMAT     =
-        [
-            [8, 3, 0, 1, 1, 1, 1, 0, 1, 2],
-            [8, 6, 0, 1, 3, 3, 3, 0, 2, 4],
-            [8, 8, 0, 1, 7, 7, 3, 0, 3, 6],
-            [16, 16, 0, 1, 63, 31, 31, 0, 6, 11],
-            [32, 24, 0, 1, 255, 255, 255, 16, 8, 0]
-        ],
+    PIXEL_FORMAT     =
+    [
+        [8, 3, 0, 1, 1, 1, 1, 0, 1, 2],
+        [8, 6, 0, 1, 3, 3, 3, 0, 2, 4],
+        [8, 8, 0, 1, 7, 7, 3, 0, 3, 6],
+        [16, 16, 0, 1, 63, 31, 31, 0, 6, 11],
+        [32, 24, 0, 1, 255, 255, 255, 16, 8, 0]
+    ],
+    test_packed_rle = true, 
+    test_plain_rle = true, 
+    test_packed = true, 
+    test_raw = true,
 
 
     //
@@ -70,7 +74,7 @@ var that           = {},  // Public API methods
     // In preference order
     encodings      = [
         ['COPYRECT',         0x01 ],
-        ['ZRLE',    16],
+        //['ZRLE',    16],
         ['TIGHT',            0x07 ],
         ['TIGHT_PNG',        -260 ],
         ['HEXTILE',          0x05 ],
@@ -164,6 +168,8 @@ Util.conf_defaults(conf, that, defaults, [
     ['shared',             'rw', 'bool', true,  'Request shared mode'],
     ['view_only',          'rw', 'bool', false, 'Disable client mouse/keyboard'],
 
+    ['clientWidth',     'rw', 'int', 0, 'width of client'],
+    ['clientHeight',     'rw', 'int', 0, 'height of client'],
     ['connectTimeout',     'rw', 'int', def_con_timeout, 'Time (s) to wait for connection'],
     ['disconnectTimeout',  'rw', 'int', 3,    'Time (s) to wait for disconnection'],
 
@@ -338,10 +344,10 @@ function constructor()
     {
         Util.Warn("Using web-socket-js bridge. Flash version: " +
                   Util.Flash.version);
-        if ((! Util.Flash) ||
-            (Util.Flash.version < 9)) 
+        if ((! Util.Flash) )//9)) MQ for test
         {
-            updateState('fatal', "WebSockets or <a href='http://get.adobe.com/flashplayer'>Adobe Flash<\/a> is required");
+            updateState('fatal', "WebSockets or <a href='http://get.adobe.com/flashplayer'>Adobe Flash<\/a> is required--version:"
+                +Util.Flash.version);
         } 
         else if (document.location.href.substr(0, 7) === "file://") 
         {
@@ -1055,10 +1061,13 @@ init_msg = function()
             Util.Warn("Intel AMT KVM only support 8/16 bit depths. Disabling true color");
             conf.true_color = false;
         }
+        getInfo();
 
         display.set_true_color(conf.true_color);
         conf.onFBResize(that, fb_width, fb_height);
         display.resize(fb_width, fb_height);
+        scaleCanvas();
+        
         keyboard.grab();
         mouse.grab();
 
@@ -1089,6 +1098,41 @@ init_msg = function()
     }
     //Util.Debug("<< init_msg");
 };
+
+function scaleCanvas() {
+   var ratio, scaleX, scaleY;
+   scaleX = (conf.clientWidth / fb_width);
+   scaleY = (conf.clientHeight / fb_height);
+    Util.Debug("["+conf.clientWidth+","+conf.clientHeight+"]");
+    Util.Debug("try to scale---:"+scaleX + "," + scaleY);
+    display.set_scale(scaleX, scaleY);
+}
+
+function getInfo() 
+{ 
+var s = ""; 
+s = (" 网页可见区域宽：" + document.body.clientWidth) +
+        (" 网页可见区域高：" + document.body.clientHeight) +
+        (" 网页可见区域宽：" + document.body.offsetWidth +" (包括边线和滚动条的宽)") +
+        (" 网页可见区域高：" + document.body.offsetHeight +" (包括边线的宽)") +
+        (" 网页正文全文宽：" + document.body.scrollWidth) +
+        (" 网页正文全文高：" + document.body.scrollHeight) +
+        (" 网页被卷去的高(ff)：" + document.body.scrollTop) +
+        (" 网页被卷去的高(ie)：" + document.documentElement.scrollTop) +
+        (" 网页被卷去的左：" + document.body.scrollLeft) +
+        (" 网页正文部分上：" +window.screenTop) +
+        (" 网页正文部分左：" + window.screenLeft) +
+        (" 屏幕分辨率的高：" + window.screen.height) +
+        (" 屏幕分辨率的宽：" + window.screen.width) +
+        (" 屏幕可用工作区高度：" + window.screen.availHeight) +
+        (" 屏幕可用工作区宽度：" + window.screen.availWidth) +
+
+        (" 你的屏幕设置是 " + window.screen.colorDepth +" 位彩色") +
+        (" 你的屏幕设置 " + window.screen.deviceXDPI +" 像素/英寸"); 
+Util.Debug(s);
+
+} 
+
 
 
 /* Normal RFB/VNC server message handler */
@@ -1203,7 +1247,7 @@ framebufferUpdate = function() {
                 msg += " encoding:" + FBU.encoding;
                 msg += "(" + encNames[FBU.encoding] + ")";
                 msg += ", ws.rQlen(): " + ws.rQlen();
-                Util.Debug(msg);
+                //Util.Debug(msg);
                 
             } else {
                 fail("Disconnected: unsupported encoding " +
@@ -1521,14 +1565,44 @@ function readBufferData(count, zrleInStream) {
 }
 
 function HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream) {
+    var useOld = false;
 //Util.Debug("<<HandleData----["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize:"+palSize);
+    
             if (!rle) {
                 if (palSize == 0) {
-                    //Util.Debug("readZrleRawPixels-"+zrleInStream.toString());
-
-                    zrleTilePixels = readBufferData(tw*th, zrleInStream);
+                    if (test_raw) {
+                        Util.Debug("readZrleRawPixels-"+zrleInStream.toString());
+                    };
+                    
+                    if (useOld) {
+                        zrleTilePixels = readBufferData(tw*th, zrleInStream);
+                    } else {
+                        var d = [];
+                        if (colorDepth == 24) {
+                            d = zrleInStream.readData(tw*th*3);
+                            var b;
+                            for (var i = 0; i < d.length; i++) {
+                                    b = d[i];
+                                    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+                                    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+                                    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+                                    zrleTilePixels[i] = b;
+                            };
+                        } else {
+                            d = readBufferData(tw*th, zrleInStream);
+                        
+                            for (var i = 0; i < d.length; i++) {
+                                for (var j = 0; j < 3; j++) {
+                                    zrleInStream[i*3+j] = (d[i] >> (2 - j)*8) & 255;
+                                };
+                            };
+                        }
+                        
+                    }
                 } else {
-                    //Util.Debug("readZrlePackedPixels-"+zrleInStream.toString());
+                    if (test_packed) {
+                        Util.Debug("readZrlePackedPixels-"+zrleInStream.toString());
+                    };
 
                     var bppp = ((palSize > 16) ? 8 :
                                         ((palSize > 4) ? 4 :
@@ -1549,18 +1623,30 @@ function HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream) {
                             };
                             nbits -= (+bppp);
                             var index = (b >> nbits) & ((1 << bppp) - 1) & 127;
-                            zrleTilePixels[ptr++] = palette[index];
-                            //var j = ptr++;
-                            //for (var i = 0; i < 3; i++) {
-                            //    zrleTilePixels[j*3 + i] = ( palette[index] >> (2 - i) * 8 ) & 255;
-                            //};
+                            if (test_packed) {
+                                Util.Debug("index:"+index+"-palette:"+palette[index]);
+                            };
+                            if (useOld) {
+                                zrleTilePixels[ptr++] = palette[index];
+                            } else {
+                                var j = ptr++;
+                                for (var i = 0; i < 3; i++) {
+                                    zrleTilePixels[j*3 + i] = ( palette[index] >> (2 - i) * 8 ) & 255;
+                                };
+                            }
                         }
                     };
+                    if (test_packed) {
+                        test_packed = false;
+                    };
+                    
                 }
             } else {
                 if (palSize == 0) {
-                    //Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.toString());
-
+                    if (test_plain_rle) {
+                        Util.Debug("readZrlePlainRLEPixels--"+zrleInStream.toString());
+                    };
+                    
                     var ptr = 0;
                     var end = +ptr + (+(tw * th));
                     while (ptr < end) {
@@ -1580,17 +1666,24 @@ function HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream) {
                         };
                         //Util.Debug("readZrlePlainRLEPixels--len:"+len+"-ptr:"+(ptr+1)+"-pix:"+pix);
                         while (len-- > 0) { 
-                            zrleTilePixels[ptr++] = pix;
-                            //var j = ptr++;
-                            //for (var i = 0; i < 3; i++) {
-                            //    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
-                            //};
+                            if (useOld) {
+                                zrleTilePixels[ptr++] = pix;
+                            } else {
+                                var j = ptr++;
+                                for (var i = 0; i < 3; i++) {
+                                    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
+                                };
+                            }
                         }
 
                     }
                 } else {
 
-                    //Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.toString());
+                    
+                    if (test_packed_rle) {
+                        Util.Debug("readZrlePackedRLEPixels--"+zrleInStream.toString());
+                        Util.Debug("palette:"+palette);
+                    };
 
                     var ptr = 0;
                     var end = ptr + tw * th;
@@ -1598,31 +1691,42 @@ function HandleData(tx, ty, tw, th, rle, palSize, palette, zrleInStream) {
                     while (ptr < end) {
 
                         var index = zrleInStream.readData(1); //ws.rQshift8();
+                        if (test_packed_rle) {
+                            Util.Debug("first index:"+index);
+                        };
 
                         var len = 1;
                         if ((index & 128) != 0) {
                             var b;
                             do {
-
                                 b = zrleInStream.readData(1); //ws.rQshift8();
-
                                 len += (+b);
-
                             } while (b == 255);
-
                             if (!(len <= end - ptr)) {
                                 fail("ZRLE decoder: assertion failed2 (len <= end - ptr)");
                             };
                         };
                         index &= 127;
+                        if (test_packed_rle) {
+                            Util.Debug("index:"+index+"-palette:"+palette[index]+"-len:"+len+"");
+                            
+                        };
                         var pix = palette[index];
                         while (len-- > 0) {
-                            zrleTilePixels[ptr++] = pix;
-                            //var j = ptr++;
-                            //for (var i = 0; i < 3; i++) {
-                            //    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
-                            //};
+                            if (useOld) {
+                                zrleTilePixels[ptr++] = pix;
+                            } else {
+                                var j = ptr++;
+                                for (var i = 0; i < 3; i++) {
+                                    zrleTilePixels[j*3 + i] = ( pix >> (2 - i) * 8 ) & 255;
+                                };
+                            }
                         }
+                        if (test_packed_rle) {
+                            test_packed_rle = false;
+                            Util.Debug("=====================================");
+                        };
+                        
                     }
                     //======================================================
 
@@ -1727,7 +1831,8 @@ function tranToRGB(data) {
 encHandlers.ZRLE = function () 
 {
     //Util.Debug("<<<<<<<<<<<<<<<<<<<<encHandlers.ZRLE--["+ws.rQslice(0, 10)+"]");
-    var nBytes, tx, ty, tw, th;
+    var nBytes, tx, ty, tw, th, img;
+    
     FBU.bytes = 4;
     if (ws.rQwait("ZRLE data length bytes", FBU.bytes)) { return false; }//read data length
     nBytes = ws.rQshift32();
@@ -1756,8 +1861,8 @@ encHandlers.ZRLE = function ()
             fail("uncompress failed!");
     }
     //seeData(uncompress.data);
-    if (false) {
-        Util.Debug("length:"+data.length+"["+data+"]");
+    if (true) {
+        //Util.Debug("length:"+data.length+"["+data+"]");
         Util.Debug("length:"+uncompress.data.length+"["+uncompress.data+"]");
     };
 
@@ -1772,10 +1877,16 @@ encHandlers.ZRLE = function ()
      } else {
          FBU.zrleInStream.addData(uncompress.data);
      };
+     var length = uncompress.data.length;
         
      //Util.Debug("---"+FBU.zrleInStream.debugBuf());
 
-    while (FBU.zrleInStream.tiles > 0) {
+    for (ty = FBU.y; ty < FBU.y+FBU.height; ty += 64) {
+       th = Math.min(FBU.y+FBU.height-ty, 64);
+      for (tx = FBU.x; tx < FBU.x+FBU.width; tx += 64) {
+        tw = Math.min(FBU.x+FBU.width-tx, 64);
+
+//    while (FBU.zrleInStream.tiles > 0) {
 
         FBU.zrleInStream.cur_tile = FBU.zrleInStream.total_tiles - FBU.zrleInStream.tiles;
         //Util.Debug("=====================================")
@@ -1784,22 +1895,51 @@ encHandlers.ZRLE = function ()
         var tile_y = Math.floor((+FBU.zrleInStream.cur_tile) / (+FBU.zrleInStream.tiles_x));
         //Util.Debug("MQ-----["+tile_x+","+tile_y+
         //    "]-cur_tile:"+FBU.zrleInStream.cur_tile);
-        tx = FBU.x + tile_x *64;
-        ty = FBU.y + tile_y *64;
-        tw = Math.min(64, (FBU.x + FBU.width) - tx);
-        th = Math.min(64, (FBU.y + FBU.height) - ty);
+   //     tx = FBU.x + tile_x *64;
+  //      ty = FBU.y + tile_y *64;
+ //       tw = Math.min(64, (FBU.x + FBU.width) - tx);
+//        th = Math.min(64, (FBU.y + FBU.height) - ty);
 
             var mode = FBU.zrleInStream.readData(1); //ws.rQshift8();//read mode
             var rle = (mode & 128) != 0;
             var palSize = mode & 127;
             var palette = [];
+            var all, d1, d2, d3;
+            if (!rle) {
+                d1 = palSize * 3;
+                d2 = tw * th * 3;
+                d3 = tw * th;
+                if (palSize == 0) {
+                    all = d2;
+                } else {
+                    all = d1 + d3;
+                }
+            } else {
+                if (palSize == 0) {
+                    all = d2 + d3;
+                } else {
+                    all = d1 + d3;
+                }
+            }
+            if (all + 1 > length) {
+                Util.Debug("===============ERROR!===================");
+                Util.Debug("["+tx+","+ty+","+tw+","+th+"]");
+                Util.Debug("data:"+uncompress.data);
+                Util.Debug("===============ERROR!===================");
+            };
+            Util.Debug("----["+tile_x+","+tile_y+"]-"+"["+tx+","+ty+","+tw+","+th+"]"+"-rle:"+rle+"-palSize:"+palSize);
+            Util.Debug("["+(palSize * 3)+","+(tw * th * 3)+","+(tw * th)+"]"+"["+length+"]");
             
             palette = readBufferData(palSize, FBU.zrleInStream);
             //Util.Debug("--palette:"+palette);
 
             if (palSize == 1) {
-                var color = palette[0];
-                display.fillRect(x, y, w, h, color);
+                var color = [];
+                for (var i = 0; i < 3; i++) {
+                    color[i] = (palette[0] >> (2 - i)*8) & 255;
+                };
+                
+                display.fillRect(tx, ty, tw, th, color);
 
                 continue;
             };
@@ -1807,31 +1947,45 @@ encHandlers.ZRLE = function ()
         HandleData(tx, ty, tw, th, rle, palSize, palette, FBU.zrleInStream);
 
 
-        //Util.Debug("["+tx+","+ty+","+tw+","+th+"]")
+        //Util.Debug("["+tx+","+ty+","+tw+","+th+"]");
         //seeData(zrleTilePixels);
-        //Util.Debug("--------------------------------------------")
+        //Util.Debug("--------------------------------------------");
         //Util.Debug(""+zrleTilePixels.slice(0, 20));
-        //Util.Debug("--------------------------------------------")
+        //Util.Debug("--------------------------------------------");
         //var result = tranToRGB(zrleTilePixels);
+        if (true) {
+            display.renderQ_push({
+                'type': 'blitRgb',
+                'data': zrleTilePixels,
+                'x': tx,
+                'y': ty,
+                'width': tw,
+                'height': th});
+        } else {
+            img = new Image();
+            img.src = "data:image/" +
+            extract_data_uri(zrleTilePixels);
+            display.renderQ_push({
+                'type': 'img',
+                'img': img,
+                'x': FBU.x,
+                'y': FBU.y});
+            img = null;
+        }
 
-        display.renderQ_push({
-            'type': 'zrle',
-            'data': zrleTilePixels,
-            'x': tx,
-            'y': ty,
-            'width': tw,
-            'height': th});
         zrleTilePixels = [];
         FBU.zrleInStream.tiles -=1;
         //Util.Debug("=====================================")
+    //}
+        }
     }
 
-    if (FBU.zrleInStream.tiles == 0) {
+    //if (FBU.zrleInStream.tiles == 0) {
        //Util.Debug("---"+FBU.zrleInStream.debugBuf());
         FBU.zrleInStream = null;
         FBU.bytes = 0;
         FBU.rects -= 1;
-    }
+    //}
     return true;
 }
 

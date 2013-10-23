@@ -47,7 +47,8 @@ Util.conf_defaults(conf, that, defaults, [
     ['logo',        'rw', 'raw',  null, 'Logo to display when cleared: {"width": width, "height": height, "data": data}'],
     ['true_color',  'rw', 'bool', true, 'Use true-color pixel data'],
     ['colourMap',   'rw', 'arr',  [], 'Colour map array (when not true-color)'],
-    ['scale',       'rw', 'float', 1.0, 'Display area scale factor 0.0 - 1.0'],
+    ['scaleX',       'rw', 'float', 1.0, 'Display area scale factor 0.0 - 1.0'],
+    ['scaleY',       'rw', 'float', 1.0, 'Display area scale factor 0.0 - 1.0'],
     ['viewport',    'rw', 'bool', false, 'Use a viewport set with viewportChange()'],
     ['width',       'rw', 'int', null, 'Display area width'],
     ['height',      'rw', 'int', null, 'Display area height'],
@@ -61,7 +62,7 @@ Util.conf_defaults(conf, that, defaults, [
 // Override some specific getters/setters
 that.get_context = function () { return c_ctx; };
 
-that.set_scale = function(scale) { rescale(scale); };
+that.set_scale = function(scaleX, scaleY) { rescale(scaleX, scaleY); };
 
 that.set_width = function (val) { that.resize(val, fb_height); };
 that.get_width = function() { return fb_width; };
@@ -113,6 +114,8 @@ function constructor() {
         conf.prefer_js = true;
     }
 
+    Util.Debug("if can scale:"+('scale' in c_ctx));
+
     // Initialize cached tile imageData
     tile16x16 = c_ctx.createImageData(16, 16);
 
@@ -148,7 +151,8 @@ function constructor() {
     return that ;
 }
 
-rescale = function(factor) {
+rescale = function(factorX, factorY) {
+    Util.Debug("====display.js---factorX:"+factorX+","+factorY);
     var c, tp, x, y, 
         properties = ['transform', 'WebkitTransform', 'MozTransform', null];
     c = conf.target;
@@ -166,23 +170,22 @@ rescale = function(factor) {
     }
 
 
-    if (typeof(factor) === "undefined") {
-        factor = conf.scale;
-    } else if (factor > 1.0) {
-        factor = 1.0;
-    } else if (factor < 0.1) {
-        factor = 0.1;
-    }
-
-    if (conf.scale === factor) {
-        //Util.Debug("Display already scaled to '" + factor + "'");
-        return;
-    }
-
-    conf.scale = factor;
-    x = c.width - c.width * factor;
-    y = c.height - c.height * factor;
-    c.style[tp] = "scale(" + conf.scale + ") translate(-" + x + "px, -" + y + "px)";
+    conf.scaleX = factorX;
+    conf.scaleY = factorY;
+    if (factorY < 1) {
+        x = c.width - c.width * factorX;
+        y = c.height - c.height * factorY;
+    } else {
+        x = 0;
+        y = (c.height * factorY - c.height) / 4;
+    };
+    //x = c.width - c.width * factor;
+    //y = c.height - c.height * factor;
+     Util.Debug("====display.js--width:"+c.width+"-height:"+c.height);
+    var d = "scale(" + factorX + "," + factorY + ") translate(" + x + "px, " + y + "px)";
+    
+    c.style[tp] = d;
+    Util.Debug("====display.js--rescal--tp:"+tp+"-"+d);//WebkitTransform
 };
 
 setFillColor = function(color) {
@@ -206,6 +209,7 @@ setFillColor = function(color) {
 
 // Shift and/or resize the visible viewport
 that.viewportChange = function(deltaX, deltaY, width, height) {
+    Util.Debug("=======================viewportChange--viewport:"+conf.viewport);
     var c = conf.target, v = viewport, cr = cleanRect,
         saveImg = null, saveStyle, x1, y1, vx2, vy2, w, h;
 
@@ -401,7 +405,7 @@ that.resize = function(width, height) {
     fb_width = width;
     fb_height = height;
 
-    rescale(conf.scale);
+    rescale(conf.scaleX, conf.scaleY);
     that.viewportChange();
 };
 
@@ -558,7 +562,7 @@ cmapImageData = function(x, y, vx, vy, width, height, arr, offset) {
 };
 
 that.zrleImage = function(x, y, width, height, arr, offset) {
-    Util.Debug("<<<<<<<<<<<<zrleImage");
+    //Util.Debug("<<<<<<<<<<<<zrleImage");
     var img, i, j, data;
     /*
     if ((x - v.x >= v.w) || (y - v.y >= v.h) ||
@@ -578,12 +582,12 @@ that.zrleImage = function(x, y, width, height, arr, offset) {
             if (j == 3) {
                 data[i*4 + 3] = 255;
             } else {
-                data[i*4 + j] = (arr[i] >> (3-i)*8) & 255;
+                data[i*4 + j] = (arr[i] >> (2-i)*8) & 255;
             }
         };
     }
     c_ctx.putImageData(img, x - viewport.x, y - viewport.y);
-    Util.Debug("<<<<<<<<<<<<<<zrleImage");
+    //Util.Debug("<<<<<<<<<<<<<<zrleImage");
 }
 
 that.blitImage = function(x, y, width, height, arr, offset) {

@@ -69,6 +69,9 @@ start: function(callback) {
         }
     }
 
+    var viewOnly = window.location.view_only;
+    Util.Debug("=ui.js==============viewOnly:"+viewOnly);
+
     /* Populate the controls if defaults are provided in the URL */
     UI.initSetting('host', window.location.hostname);
     UI.initSetting('port', port);
@@ -638,6 +641,7 @@ clipSend: function() {
 // Enable/disable and configure viewport clipping
 setViewClip: function(clip) {
     var display, cur_clip, pos, new_w, new_h;
+    Util.Debug("======ui.js-----setViewClips---clip:"+clip);
 
     if (UI.rfb) {
         display = UI.rfb.get_display();
@@ -658,6 +662,7 @@ setViewClip: function(clip) {
     } else if (!clip && cur_clip) {
         // Turn clipping off
         UI.updateSetting('clip', false);
+        Util.Debug("=====ui.js----setViewClip---set_viewport false");
         display.set_viewport(false);
         $D('noVNC_canvas').style.position = 'static';
         display.viewportChange();
@@ -668,6 +673,7 @@ setViewClip: function(clip) {
         pos = Util.getPosition($D('noVNC_canvas'));
         new_w = window.innerWidth - pos.x;
         new_h = window.innerHeight - pos.y;
+        Util.Debug("=====ui.js----setViewClip---set_viewport true");
         display.set_viewport(true);
         display.viewportChange(0, 0, new_w, new_h);
     }
