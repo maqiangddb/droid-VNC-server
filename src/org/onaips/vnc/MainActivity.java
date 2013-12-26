@@ -84,7 +84,7 @@ public class MainActivity extends Activity
         @Override
         public void onReceive(Context context, Intent intent) {
             log("MainAcitivity onReveive:"+intent);
-            Log.i(VNC_LOG, "<<<<<<<<MainActivity<receive intent:"+intent);
+            log("<<<<<<<<MainActivity<receive intent:"+intent);
             String action = intent.getAction();
              if (action.equals(VncServerReceiver.VNC_STATE_CHANGE_ACTION)) {
                 int state = intent.getIntExtra(VncServerReceiver.EXTRA_STATE, VncServerReceiver.STATE_STOPED);
@@ -194,7 +194,7 @@ public class MainActivity extends Activity
 
     //rodar vnc com acc
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @TargetApi(Build.VERSION_CODES.BASE)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //delete menu MQ
@@ -206,63 +206,6 @@ public class MainActivity extends Activity
     // This method is called once the menu is selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // We have only one menu option
-            case R.id.preferences:
-                // Launch Preference activity
-                VncSettings.show(this);
-
-                showTextOnScreen(this.getString(R.string.settings_hint));
-
-                break;
-            case R.id.close:
-                System.exit(1);
-                break;
-            case R.id.help:
-                showHelp();
-                break;
-            case R.id.reverse:
-                if (ServerManager.isServerRunning())
-                {
-                    startDialog = new AlertDialog.Builder(this).create();
-                    startDialog.setTitle(R.string.already_running);
-                    startDialog.setMessage(this.getString(R.string.restart_server));
-                    startDialog.setButton(AlertDialog.BUTTON1,this.getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            startReverseConnection();
-                        }
-                    });
-
-                    startDialog.setButton2(this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                        }
-                    });
-                    startDialog.show();
-                }
-                else
-                    startReverseConnection();
-
-                break;
-            case R.id.log:
-                collectAndSendLog();
-                break;
-            case R.id.about:
-
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.about)
-                        .setMessage(Html.fromHtml("version " + packageVersion() + "<br><br>Code: @oNaiPs<br><br>Graphics: ricardomendes.net<br><br>Under the GPLv3"))
-                        .setPositiveButton("Close", null)
-                        .setNegativeButton("Open Website", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://onaips.com"));
-                                startActivity(myIntent);
-
-                            }
-                        })
-                        .show();
-                break;
-
-        }
         return true;
     }
 
@@ -335,7 +278,6 @@ public class MainActivity extends Activity
 
         Button settings = (Button) findViewById(R.id.settings_btn);
         settings.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
                 log("settings_btn onClicked");
                 VncSettings.show(MainActivity.this);
@@ -346,7 +288,9 @@ public class MainActivity extends Activity
 
 	public void log(String s)
 	{
-		Log.v(VNC_LOG, s);
+        if (Util.ENG) {
+		    Log.v(VNC_LOG, s);
+        }
 	}
 
 

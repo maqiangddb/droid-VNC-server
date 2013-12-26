@@ -15,9 +15,12 @@ import java.util.Enumeration;
  */
 public class Util {
     public static final String VNC_TAG = "VNCserver";
+    public static final boolean ENG = true;
 
     public static void LOGI(String msg) {
-        Log.i(VNC_TAG, msg);
+        if (ENG) {
+            Log.i(VNC_TAG, msg);
+        }
     }
 
 
@@ -40,6 +43,25 @@ public class Util {
             ex.printStackTrace();
         }
         return "";
+    }
+
+    public static int makePort(String ip) {
+        LOGI("makePort:"+ip);
+        String[] datas = ip.trim().split("\\.");
+        for (int i = 0 ; i < datas.length ; i++) {
+            LOGI("="+datas[i]);
+        }
+        if (datas.length < 4) {
+            return 0;
+        }
+        int d1 = Integer.parseInt(datas[0]);
+        int d2 = Integer.parseInt(datas[1]);
+        int d3 = Integer.parseInt(datas[2]);
+        int d4 = Integer.parseInt(datas[3]);
+        LOGI("["+d1+","+d2+","+d3+","+d4+"]");
+        int result = (((d3 + d4) << 8) & 0xffff) | 0x400;
+        LOGI("result;"+result);
+        return result;
     }
 
     public static String getHttpPort(Context context) {

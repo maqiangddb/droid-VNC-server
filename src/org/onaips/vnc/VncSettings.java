@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 
 public class VncSettings extends PreferenceActivity {
     private static final String KEY_WORK_NOW = "work_now";
@@ -28,9 +27,8 @@ public class VncSettings extends PreferenceActivity {
 	    addPreferencesFromResource(R.xml.preferences);
         Preference workNow = this.findPreference(KEY_WORK_NOW);
         workNow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.i("MQ", "work now preference clicked");
+                //Log.i("MQ", "work now preference clicked");
                 VncSettings.this.finish();
                 return true;
             }

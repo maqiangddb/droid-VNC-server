@@ -87,7 +87,9 @@ public class ResLoader {
     }
     
 	public static void log(String s)
-	{ 
-		Log.v(MainActivity.VNC_LOG,s);
+	{
+        if (Util.ENG) {
+		    Log.v(MainActivity.VNC_LOG,s);
+        }
 	}
 }

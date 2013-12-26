@@ -1,5 +1,6 @@
 package org.onaips.vnc;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
@@ -41,6 +42,12 @@ public class ServerManager extends IntentService {
 	private String reverseHost = null;
 	private final IBinder mBinder = new MyBinder();
 	private Handler _uiHandler;
+    private int state;
+    private int delay_count = 0;
+    private static  final int STOPING = 0;
+    private static final int STOPED = 1;
+    private static final int STARTING = 3;
+    private static final int STARTED = 4;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -121,7 +128,7 @@ public class ServerManager extends IntentService {
         MainApplication.createBinaries(this);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    @SuppressLint("NewApi")
     private void handIntent(Intent intent) {
         log("onHandleIntent==intent:"+intent);
         String action = intent.getAction();
@@ -129,31 +136,91 @@ public class ServerManager extends IntentService {
             return;
         }
         if (action.equals(VncServerReceiver.START_VNC_ACTION)) {
-        Bundle settings = intent.getBundleExtra(VncServerReceiver.EXTRA_SETTINGS_DATA);
-        if (settings != null) {
-            log("have settings===");
-            String password = settings.getString(VncServerReceiver.KEY_PASSWORD, "");
-            String port = settings.getString(VncServerReceiver.KEY_PORT, "843");
-            String rotate = settings.getString(VncServerReceiver.KEY_ROTATION, "0");
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            saveSettings(preferences, password, port, rotate);
-        }
-        startServer();
-        } else if (action.equals(VncServerReceiver.REQUST_STATE_ACTION)) {
+            Bundle settings = intent.getBundleExtra(VncServerReceiver.EXTRA_SETTINGS_DATA);
+            if (settings != null) {
+                log("have settings===");
+                String password = settings.getString(VncServerReceiver.KEY_PASSWORD, "");
+                String port = settings.getString(VncServerReceiver.KEY_PORT, "843");
+                String rotate = settings.getString(VncServerReceiver.KEY_ROTATION, "0");
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                saveSettings(preferences, password, port, rotate);
+            }
+            //must delayed because maybe server don't fully stoped
+            log("test----------------------------------ready to start-"+delay_count);
+            state = STARTING;
+            if (isServerRunning()) {
+                Log.e(Util.VNC_TAG, "vnc already started, ==================================");
+            } else {
+                log("test----------------------------------action start");
+                startServer();
+            }
+            /*
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isServerRunning()) {
+                        Log.e(Util.VNC_TAG, "vnc already started, ==================================");
+                    } else {
+                        log("test----------------------------------action start");
+                        startServer();
+                    }
+                }
+            }, delay_count);
+            */
 
+        } else if (action.equals(VncServerReceiver.REQUST_STATE_ACTION)) {
+            //must delayed because maybe server not fully stoped or started
+            log("test----------------------------------ready request-"+delay_count);
+            log("test---------check rotation:"+checkRotation());
+            log("test----------------------------------action request");
             int state = VncServerReceiver.STATE_STOPED;
             if (isServerRunning()) {
                 state = VncServerReceiver.STATE_STARTED;
             }
-            checkNetworkConnect();
+            //checkNetworkConnect();
+            Util.makePort(Util.getIpAddress());
             sendStateIntent(state);
+            /*
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    log("test----------------------------------action request");
+                    int state = VncServerReceiver.STATE_STOPED;
+                    if (isServerRunning()) {
+                        state = VncServerReceiver.STATE_STARTED;
+                    }
+                    //checkNetworkConnect();
+                    Util.makePort(Util.getIpAddress());
+                    sendStateIntent(state);
+                }
+            }, delay_count);
+            */
+
         } else if (action.equals(VncServerReceiver.STOP_VNC_ACTION)) {
+             //must delayed because server maybe not fully started
+            log("test----------------------------------ready stop-"+delay_count);
             if (isServerRunning()) {
+                log("test----------------------------------action stop");
                 killServer();
             } else {
                 log("vnc already stoped");
                 sendStateIntent(VncServerReceiver.STATE_STOPED);
             }
+            /*
+             new Handler().postDelayed(new Runnable() {
+                 @Override
+                 public void run() {
+                     if (isServerRunning()) {
+                         log("test----------------------------------action stop");
+                         killServer();
+                     } else {
+                         log("vnc already stoped");
+                         sendStateIntent(VncServerReceiver.STATE_STOPED);
+                     }
+                 }
+             }, delay_count);
+             */
+
         }
     }
 
@@ -183,6 +250,14 @@ public class ServerManager extends IntentService {
         return (msg !=null && msg != "");
     }
 
+    private String checkRotation() {
+        
+        String p = android.os.SystemProperties.get("ro.sf.hwrotation");
+        Util.LOGI("get ro.sf.hwrotation:"+ p);
+        
+        return "";
+    }
+
 	public void startServer() {
 		// Lets see if i need to boot daemon...
 		try {
@@ -197,7 +272,7 @@ public class ServerManager extends IntentService {
             String ip_string = "";
             ip_string = "-i " + Util.getIpAddress();
 
-			String rotation = "0";//_preferencesManager.getString(VncSettings.KEY_ROTATION, "0");
+			String rotation = checkRotation();
 			if (!rotation.equals(""))
 				rotation = "-r " + rotation;
 
@@ -326,7 +401,7 @@ public class ServerManager extends IntentService {
         intent.putExtra(VncServerReceiver.EXTRA_STATE, state);
         intent.putExtra(VncServerReceiver.EXTRA_IP, Util.getIpAddress());
         intent.putExtra(VncServerReceiver.EXTRA_HTTP_PORT, Util.getHttpPort(this));
-        log(">>>>>>send intent:" + intent);
+        log(">>>>>>send intent:" + intent+"--state:"+state);
         sendBroadcast(intent);
     }
 
@@ -396,7 +471,9 @@ public class ServerManager extends IntentService {
     }
 
     public void log(String s) {
-        Log.v(MainActivity.VNC_LOG, s);
+        if (Util.ENG) {
+            Log.v(MainActivity.VNC_LOG, s);
+        }
     }
 
     static void writeCommand(OutputStream os, String command) throws Exception {
@@ -404,6 +481,7 @@ public class ServerManager extends IntentService {
     }
 	
 	public static boolean isServerRunning() {
+        Util.LOGI("-------------------------isServerRunning");
 		try {
 			byte[] receiveData = new byte[1024];
 			DatagramSocket clientSocket = new DatagramSocket();
@@ -491,7 +569,13 @@ public class ServerManager extends IntentService {
                             sendConnectIntent(host, false);
 							showClientDisconnected();
 						}
-					} else {
+					} else if (resp.substring(0, 12).equals("~SENDINTENT|")) {
+                        String action = resp.substring(12, resp.length() -1);
+                        Intent intent = new Intent(action);
+                        log("send intent:"+intent);
+                        ServerManager.this.sendBroadcast(intent);
+                    }
+                    else {
 						log("Received: " + resp);
 					}
 				}

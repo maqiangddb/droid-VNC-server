@@ -41,36 +41,36 @@ public class VncServerReceiver extends BroadcastReceiver
 	@Override
 	public void onReceive(Context context, Intent intent) 
 	{
-        Log.i(MainActivity.VNC_LOG, "<<<<<<<<<<<VncServerReceiver===onReceiver=intent:"+intent);
+        log("<<<<<<<<<<<VncServerReceiver===onReceiver=intent:"+intent);
 
         String action = intent.getAction();
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
 			//Intent i = new Intent(context,ServerManager.class);
 			//context.startService(i);
 		}  else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-            checkNetworkInfo(context);
+            //checkNetworkInfo(context);
         } else if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
-            Log.i(TAG, "===wifi supplicant Connection Change");
+            //Log.i(TAG, "===wifi supplicant Connection Change");
             boolean state = intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false);
-            Log.i(TAG, "===connection state:"+state);
+            //Log.i(TAG, "===connection state:"+state);
         } else if (action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
-            Log.i(TAG, "====wifi state changed====");
+            log("====wifi state changed====");
             int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
             switch (state) {
                 case WifiManager.WIFI_STATE_DISABLED:
-                    Log.i(TAG, "WIFI_STATE_DISABLED");
+                    log("WIFI_STATE_DISABLED");
                     break;
                 case WifiManager.WIFI_STATE_DISABLING:
-                    Log.i(TAG, "WIFI_STATE_DISABLING");
+                    log("WIFI_STATE_DISABLING");
                     break;
                 case  WifiManager.WIFI_STATE_UNKNOWN:
-                    Log.i(TAG, "WIFI_STATE_UNKNOWN");
+                    log("WIFI_STATE_UNKNOWN");
                     break;
                 case WifiManager.WIFI_STATE_ENABLED:
-                    Log.i(TAG, "WIFI_STATE_ENABLED");
+                    log("WIFI_STATE_ENABLED");
                     break;
                 case WifiManager.WIFI_STATE_ENABLING:
-                    Log.i(TAG, "WIFI_STATE_ENABLING");
+                    log("WIFI_STATE_ENABLING");
                     break;
             }
         } else if (action.equals(START_VNC_ACTION)) {
@@ -87,44 +87,50 @@ public class VncServerReceiver extends BroadcastReceiver
             int state = intent.getIntExtra(EXTRA_STATE, STATE_STOPED);
             String ip = intent.getStringExtra(EXTRA_IP);
             String httpPort = intent.getStringExtra(EXTRA_HTTP_PORT);
-            Log.i(TAG, "ip:"+ip+"==http port :"+httpPort);
+            log("ip:"+ip+"==http port :"+httpPort);
             switch (state) {
                 case STATE_STOPED:
-                    Log.i(TAG, "state stoped");
+                    log("state stoped");
                     break;
                 case STATE_STARTED:
-                    Log.i(TAG, "state started");
+                    log("state started");
                     break;
             }
         } else if (action.equals(REQUST_STATE_ACTION)) {
             Intent i = new Intent(context.getApplicationContext(), ServerManager.class);
             i.setAction(REQUST_STATE_ACTION);
-            checkNetworkInfo(context);
+            //checkNetworkInfo(context);
             context.startService(i);
         }
 	}
 
     private boolean checkNetworkInfo(Context context) {
-        Log.i(TAG, "checkNetworkInfo");
+        log("checkNetworkInfo");
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo[] infos = manager.getAllNetworkInfo();
         for (NetworkInfo i : infos) {
-            Log.i(TAG, "===info:"+i+"=Available="+i.isAvailable()+"=Connected="+i.isConnected()+"=connectedORConnecting="+i.isConnectedOrConnecting());
+            log("===info:"+i+"=Available="+i.isAvailable()+"=Connected="+i.isConnected()+"=connectedORConnecting="+i.isConnectedOrConnecting());
         }
 
         NetworkInfo activeInfo = manager.getActiveNetworkInfo();
-        Log.i(TAG, "=ActiveInfo:"+activeInfo);
-        Log.i(TAG, "=ip:"+Util.getIpAddress());
+        log("=ActiveInfo:"+activeInfo);
+        log("=ip:"+Util.getIpAddress());
         if(activeInfo != null) {
             Intent i = new Intent(MainActivity.UPDATE_STATE_ACTION);
-            Log.i(TAG, ">>>>>>>>>>send broadcast:"+i);
+            log(">>>>>>>>>>send broadcast:"+i);
             context.sendBroadcast(i);
             return true;
         } else {
             return false;
         }
 
+    }
+
+    private void log(String msg) {
+        if (Util.ENG) {
+            Log.i(Util.VNC_TAG, msg);
+        }
     }
 
 }  

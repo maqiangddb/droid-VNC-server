@@ -28,7 +28,9 @@ public class MainApplication extends Application {
  
 	public void log(String s)
 	{
-		Log.v(MainActivity.VNC_LOG,s);
+        if (Util.ENG) {
+		    Log.v(MainActivity.VNC_LOG,s);
+        }
 	}
 
 	public boolean firstRun()
@@ -90,7 +92,7 @@ public class MainApplication extends Application {
      */
 	public static void copyBinary(Context context, int id,String path)
 	{
-		Log.i(MainActivity.VNC_LOG, "copy -> " + path);
+		Util.LOGI("copy -> " + path);
 		try {
 			InputStream ins = context.getResources().openRawResource(id);
 			int size = ins.available();
@@ -106,7 +108,7 @@ public class MainApplication extends Application {
 		}
 		catch (Exception e)
 		{
-			Log.i(MainActivity.VNC_LOG, "public void createBinary() error! : " + e.getMessage());
+			Util.LOGI("public void createBinary() error! : " + e.getMessage());
 		}
 	}  
 
