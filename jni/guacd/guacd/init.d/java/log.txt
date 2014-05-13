@@ -1,0 +1,9 @@
+I/VNCserver( 1015): Error reading "select": Invalid argument: Element terminator of instruction was not ';' nor ','
+
+Protocol "vnc" selected
+guac[1369]: INFO:  Protocol "vnc" selected
+Error loading client plugin: Invalid argument: Cannot load library: load_library[1091]: Library 'libguac-client-vnc.so' not found
+guac[1369]: ERROR: Error loading client plugin: Invalid argument: Cannot load library: load_library[1091]: Library 'libguac-client-vnc.so' not found
+
+
+74AHC86 

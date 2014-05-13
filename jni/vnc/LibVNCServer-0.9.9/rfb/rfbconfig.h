@@ -520,7 +520,7 @@
 
 /* Enable support for libgcrypt in libvncclient */
 #ifndef LIBVNCSERVER_WITH_CLIENT_GCRYPT 
-#define LIBVNCSERVER_WITH_CLIENT_GCRYPT  1 
+//#define LIBVNCSERVER_WITH_CLIENT_GCRYPT  1 
 #endif
 
 /* Disable TightVNCFileTransfer protocol */

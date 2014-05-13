@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b322d88-1f8b-4875-bc9c-22c0fa04ca45" name="Default" comment="" />
+    <list default="true" id="5b322d88-1f8b-4875-bc9c-22c0fa04ca45" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/IPUtil.java" afterPath="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/IPUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/MainViewer.java" afterPath="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/MainViewer.java" />
+    </list>
     <ignored path="vnc_javasrc.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,7 +21,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -54,9 +57,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_rules />
-    <ui_properties />
+    <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -64,68 +66,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="VncViewer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/VncViewer.java">
+      <file leaf-file-name="MainViewer.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/MainViewer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="859" column="20" selection-start="24546" selection-end="24546" vertical-scroll-proportion="-6.551724" vertical-offset="18092" max-vertical-offset="21670">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ButtonPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ButtonPanel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="64" column="36" selection-start="2188" selection-end="2188" vertical-scroll-proportion="0.0" vertical-offset="858" max-vertical-offset="2970">
+            <state vertical-scroll-proportion="0.33278146" vertical-offset="591" max-vertical-offset="14696">
+              <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
               <folding>
-                <element signature="e#0#4458#0" expanded="false" />
-                <element signature="imports" expanded="false" />
+                <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ZlibInStream.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ZlibInStream.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="34" selection-start="2566" selection-end="2566" vertical-scroll-proportion="1.9186046" vertical-offset="1188" max-vertical-offset="2156">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RfbProto.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RfbProto.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="471" column="0" selection-start="13162" selection-end="13207" vertical-scroll-proportion="0.0" vertical-offset="9570" max-vertical-offset="29898">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InStream.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/InStream.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="9" selection-start="1440" selection-end="1440" vertical-scroll-proportion="0.0" vertical-offset="86" max-vertical-offset="3564">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VncCanvas.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/VncCanvas.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="960" column="21" selection-start="27038" selection-end="27038" vertical-scroll-proportion="-14.137931" vertical-offset="20138" max-vertical-offset="42680">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OptionsFrame.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/OptionsFrame.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="286" column="36" selection-start="8182" selection-end="8182" vertical-scroll-proportion="-11.862069" vertical-offset="5332" max-vertical-offset="8976">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -137,25 +85,57 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/AuthPanel.java" />
         <option value="$PROJECT_DIR$/ReloginPanel.java" />
         <option value="$PROJECT_DIR$/RfbProto.java" />
+        <option value="$PROJECT_DIR$/OptionsFrame.java" />
+        <option value="$PROJECT_DIR$/ZlibInStream.java" />
+        <option value="$PROJECT_DIR$/VncCanvas.java" />
         <option value="$PROJECT_DIR$/VncViewer.java" />
         <option value="$PROJECT_DIR$/ButtonPanel.java" />
-        <option value="$PROJECT_DIR$/OptionsFrame.java" />
-        <option value="$PROJECT_DIR$/VncCanvas.java" />
-        <option value="$PROJECT_DIR$/ZlibInStream.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/ZlibInStream.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/VncViewer.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/VncCanvas.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/FindScaner.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/ReturnScaner.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/SKLauncher/trunk/SKLauncher/src/com/samkoon/sklauncher/ReturnScanerModify.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/SKLauncher/trunk/SKLauncher/src/com/samkoon/sklauncher/UdpScaner.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/SKLauncher/trunk/SKLauncher/src/com/samkoon/sklauncher/TcpServer.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/SKLauncher/trunk/SKLauncher/src/com/samkoon/sklauncher/ReturnScaner.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/UdpScaner.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/start_test.sh" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/Android.mk" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/hello.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/push.bat" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/Util.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/SKLauncher/trunk/SKLauncher/src/com/samkoon/sklauncher/SKBroadcast.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncCanvas.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/ButtonPanel.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/test.java" />
+        <option value="E:/work/github/AndroidVncServer/jni/guacd/guacd/init.d/java/hello.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/JTableLearning.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncViewer.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/IPUtil.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/RfbProto.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/MainViewer.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/GridBagEx1.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/VncViewer.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/IPUtil.java" />
+        <option value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/MainViewer.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1" />
-    <option name="y" value="1" />
-    <option name="width" value="1364" />
-    <option name="height" value="726" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -173,7 +153,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -187,7 +167,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -199,36 +179,18 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="vnc_javasrc" />
+              <option name="myItemId" value="vnc_client" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="vnc_javasrc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="vnc_javasrc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -237,7 +199,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="File.Encoding" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -249,8 +211,16 @@
     <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
   </component>
-  <component name="RunManager" selected="Applet.VncViewer">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\Samkoon\vnc_webclient\SKLauncher\trunk\SKLauncher\src\com\samkoon\sklauncher" />
+    </key>
+  </component>
+  <component name="RunManager">
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
       <module name="" />
       <option name="TESTING_TYPE" value="0" />
@@ -259,6 +229,7 @@
       <option name="CLASS_NAME" value="" />
       <option name="PACKAGE_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
@@ -267,6 +238,8 @@
       <option name="NETWORK_SPEED" value="full" />
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -288,6 +261,33 @@
       <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -329,7 +329,9 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
@@ -338,35 +340,11 @@
       <option name="NETWORK_SPEED" value="full" />
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
-    <configuration default="false" name="VncViewer" type="Applet" factoryName="Applet">
-      <module name="vnc_javasrc" />
-      <option name="MAIN_CLASS_NAME" value="VncViewer" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="file://$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <parameter name="PORT" value="843" />
-      <parameter name="HOST" value="192.168.6.115" />
-      <parameter name="PASSWORD" value="12345678" />
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Applet.VncViewer" />
-    </list>
-    <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    </configuration>
+    <list size="0" />
     <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
     </configuration>
@@ -381,6 +359,10 @@
       <AnalysisUIOptions />
     </option>
   </component>
+  <component name="SvnConfiguration" myUseAcceleration="nothing" cleanupOnStartRun="true" SSL_PROTOCOLS="sslv3">
+    <configuration>C:\Users\mqddb\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="5b322d88-1f8b-4875-bc9c-22c0fa04ca45" name="Default" comment="" />
@@ -390,32 +372,44 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="1" width="1364" height="726" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32743362" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16743827" sideWeight="0.35929203" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18740515" sideWeight="0.35929203" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17438272" sideWeight="0.13628319" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.64070797" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24355084" sideWeight="0.13628319" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36574075" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32561728" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -429,108 +423,368 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/VncCanvas.java">
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/MainViewer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1789" column="3" selection-start="48545" selection-end="48545" vertical-scroll-proportion="0.0" vertical-offset="39358" max-vertical-offset="40612">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="5214" max-vertical-offset="10604">
+          <caret line="237" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.vnc">
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncViewer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="14" selection-start="744" selection-end="748" vertical-scroll-proportion="0.5074627" vertical-offset="146" max-vertical-offset="682" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AuthPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="32" selection-start="1547" selection-end="1547" vertical-scroll-proportion="0.0" vertical-offset="364" max-vertical-offset="2266" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ReloginPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="45" selection-start="1808" selection-end="1808" vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="1012" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SessionRecorder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="167" column="21" selection-start="4174" selection-end="4180" vertical-scroll-proportion="0.500956" vertical-offset="2928" max-vertical-offset="3894" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/VncCanvas2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="6" selection-start="926" selection-end="926" vertical-scroll-proportion="-0.7137681" vertical-offset="570" max-vertical-offset="1122">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3344" max-vertical-offset="24134">
+          <caret line="152" column="41" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MemInStream.java">
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/Util.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="9" selection-start="839" selection-end="839" vertical-scroll-proportion="0.1594203" vertical-offset="0" max-vertical-offset="552" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="132" max-vertical-offset="330">
+          <caret line="6" column="32" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/MainViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="7150" max-vertical-offset="11264">
+          <caret line="325" column="42" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3190" max-vertical-offset="23870">
+          <caret line="145" column="10" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="132" max-vertical-offset="330">
+          <caret line="6" column="32" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncCanvas.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="13046" max-vertical-offset="43340">
+          <caret line="593" column="38" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/MainViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1056" max-vertical-offset="7062">
+          <caret line="48" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/IPUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2222" max-vertical-offset="4092">
+          <caret line="101" column="20" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/hello.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="22" max-vertical-offset="836">
+          <caret line="23" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/image/DirectColorModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="149" column="11" selection-start="6022" selection-end="6022" vertical-scroll-proportion="-3.0144928" vertical-offset="4414" max-vertical-offset="30756">
-          <folding />
+        <state vertical-scroll-proportion="-3.0144928" vertical-offset="4414" max-vertical-offset="30756">
+          <caret line="149" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/util/zip/Inflater.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="200" column="19" selection-start="6044" selection-end="6044" vertical-scroll-proportion="-0.94756556" vertical-offset="4400" max-vertical-offset="8470">
+        <state vertical-scroll-proportion="-0.94756556" vertical-offset="4400" max-vertical-offset="8470">
+          <caret line="200" column="19" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/GridBagConstraints.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33273703" vertical-offset="496" max-vertical-offset="14212">
+          <caret line="54" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/ButtonPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33273703" vertical-offset="870" max-vertical-offset="2970">
+          <caret line="73" column="14" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/MANIFEST.MF">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="380">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/VncViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.7098866" vertical-offset="1848" max-vertical-offset="21670">
+          <caret line="36" column="19" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/ZlibInStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6788831" vertical-offset="1239" max-vertical-offset="2156">
+          <caret line="94" column="7" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/RfbProto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33225283" vertical-offset="4525" max-vertical-offset="29898">
+          <caret line="247" column="56" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/vnc_javasrc/VncCanvas.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="21.249147" vertical-offset="0" max-vertical-offset="42680">
+          <caret line="592" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncCanvas2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37542662" vertical-offset="0" max-vertical-offset="1122">
+          <caret line="28" column="29" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/start_test.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.07131281" vertical-offset="0" max-vertical-offset="617">
+          <caret line="2" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/push.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.17828201" vertical-offset="0" max-vertical-offset="617">
+          <caret line="5" column="45" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/Android.mk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14262562" vertical-offset="0" max-vertical-offset="617">
+          <caret line="4" column="21" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/hello.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="22" max-vertical-offset="836">
+          <caret line="23" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/StringBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33225283" vertical-offset="1643" max-vertical-offset="9240">
+          <caret line="107" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/javax/swing/JComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5513245" vertical-offset="58627" max-vertical-offset="120780">
+          <caret line="2748" column="16" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/Font.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33278146" vertical-offset="10931" max-vertical-offset="56848">
+          <caret line="565" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/VncViewer.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/net/Socket.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="859" column="20" selection-start="24546" selection-end="24546" vertical-scroll-proportion="-6.551724" vertical-offset="18092" max-vertical-offset="21670">
+        <state vertical-scroll-proportion="1.1341059" vertical-offset="22635" max-vertical-offset="35838">
+          <caret line="1096" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="132" max-vertical-offset="330">
+          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/javax/swing/JPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.317666" vertical-offset="330" max-vertical-offset="4510">
+          <caret line="115" column="11" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/ButtonPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3498">
+          <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/work/github/AndroidVncServer/jni/guacd/guacd/init.d/java/hello.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42787683" vertical-offset="0" max-vertical-offset="1320">
+          <caret line="12" column="42" selection-start-line="12" selection-start-column="42" selection-end-line="12" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/udp_test/JTableLearning.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14262562" vertical-offset="0" max-vertical-offset="3432">
+          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/SocketFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14262562" vertical-offset="0" max-vertical-offset="617">
+          <caret line="28" column="17" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/HTTPConnectSocket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.31928688" vertical-offset="285" max-vertical-offset="902">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/HTTPConnectSocketFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.71312803" vertical-offset="528" max-vertical-offset="1474">
+          <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/RfbProto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4004" max-vertical-offset="29744">
+          <caret line="223" column="45" selection-start-line="223" selection-start-column="45" selection-end-line="223" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/Window.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33278146" vertical-offset="16079" max-vertical-offset="87120">
+          <caret line="800" column="16" selection-start-line="800" selection-start-column="16" selection-end-line="800" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ButtonPanel.java">
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncCanvas.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="36" selection-start="2188" selection-end="2188" vertical-scroll-proportion="0.0" vertical-offset="858" max-vertical-offset="2970">
+        <state vertical-scroll-proportion="-0.005119454" vertical-offset="2753" max-vertical-offset="42086">
+          <caret line="161" column="14" selection-start-line="161" selection-start-column="14" selection-end-line="161" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/MainViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33278146" vertical-offset="591" max-vertical-offset="14498">
+          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/IPUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.037277147" vertical-offset="2947" max-vertical-offset="3850">
+          <caret line="148" column="23" selection-start-line="148" selection-start-column="23" selection-end-line="148" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/VncViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5148" max-vertical-offset="24398">
+          <caret line="234" column="28" selection-start-line="234" selection-start-column="20" selection-end-line="234" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/Modifyvnc/src/JTableLearning.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14424635" vertical-offset="2199" max-vertical-offset="3476">
+          <caret line="134" column="10" selection-start-line="134" selection-start-column="10" selection-end-line="134" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/CardLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26094005" vertical-offset="1929" max-vertical-offset="12606">
+          <caret line="126" column="42" selection-start-line="126" selection-start-column="38" selection-end-line="126" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/Component.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6192053" vertical-offset="51480" max-vertical-offset="212630">
+          <caret line="2575" column="20" selection-start-line="2575" selection-start-column="20" selection-end-line="2575" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/GridBagEx1.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="616" max-vertical-offset="3454">
+          <caret line="32" column="19" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/awt/Container.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33278146" vertical-offset="33437" max-vertical-offset="105336">
+          <caret line="1609" column="16" selection-start-line="1609" selection-start-column="16" selection-end-line="1609" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/util/Observable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.76012963" vertical-offset="1423" max-vertical-offset="3960">
+          <caret line="113" column="16" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/VncViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0750853" vertical-offset="22492" max-vertical-offset="23804">
+          <caret line="1102" column="30" selection-start-line="1102" selection-start-column="30" selection-end-line="1102" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/IPUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.011345219" vertical-offset="2457" max-vertical-offset="3850">
+          <caret line="125" column="17" selection-start-line="125" selection-start-column="17" selection-end-line="125" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/src/MainViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33278146" vertical-offset="591" max-vertical-offset="14696">
+          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
           <folding>
-            <element signature="e#0#4458#0" expanded="false" />
-            <element signature="imports" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OptionsFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="286" column="36" selection-start="8182" selection-end="8182" vertical-scroll-proportion="-11.862069" vertical-offset="5332" max-vertical-offset="8976">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/VncCanvas.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="960" column="21" selection-start="27038" selection-end="27038" vertical-scroll-proportion="-14.137931" vertical-offset="20138" max-vertical-offset="42680">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="9" selection-start="1440" selection-end="1440" vertical-scroll-proportion="0.0" vertical-offset="86" max-vertical-offset="3564">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RfbProto.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="471" column="0" selection-start="13162" selection-end="13207" vertical-scroll-proportion="0.0" vertical-offset="9570" max-vertical-offset="29898">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ZlibInStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="34" selection-start="2566" selection-end="2566" vertical-scroll-proportion="1.9186046" vertical-offset="1188" max-vertical-offset="2156">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -574,7 +828,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>Android 4.1.2 Platform</last-edited>
+          <last-edited>1.7</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -586,7 +840,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>vnc_javasrc</last-edited>
+          <last-edited>work_MutiVNC</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -610,6 +864,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>VncViewer</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/vnc_javasrc.iml" filepath="$PROJECT_DIR$/vnc_javasrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/work_MutiVNC.iml" filepath="$PROJECT_DIR$/../../../../../../../vnc_webclient/work_MutiVNC/work_MutiVNC.iml" />
     </modules>
   </component>
 </project>

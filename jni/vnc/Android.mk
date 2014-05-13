@@ -31,6 +31,12 @@ LIBVNCSERVER_SRC_FILES:= \
 	$(LIBVNCSERVER_ROOT)/libvncserver/zrleoutstream.c \
 	$(LIBVNCSERVER_ROOT)/libvncserver/zrlepalettehelper.c \
 	$(LIBVNCSERVER_ROOT)/libvncserver/tight.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/cursor.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/listen.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/rfbproto.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/sockets.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/vncviewer.c \
+	$(LIBVNCSERVER_ROOT)/libvncclient/tls_openssl.c \
 	$(LIBVNCSERVER_ROOT)/common/d3des.c \
 	$(LIBVNCSERVER_ROOT)/common/vncauth.c \
 	$(LIBVNCSERVER_ROOT)/common/minilzo.c \
@@ -74,6 +80,6 @@ LOCAL_C_INCLUDES += \
 
 LOCAL_STATIC_LIBRARIES := libjpeg libpng libssl_static libcrypto_static
 
-LOCAL_MODULE := androidvncserver
+LOCAL_MODULE := libandroidvncserver
 
-include $(BUILD_EXECUTABLE)
+include $(BUILD_SHARED_LIBRARY)

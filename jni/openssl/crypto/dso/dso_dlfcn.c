@@ -438,7 +438,7 @@ static int dladdr(void *address, Dl_info *dl)
 	v = _rld_new_interface(_RLD_DLADDR,address,dl);
 	return (int)v;
 }
-
+#endif /* __sgi */
 
 static int dlfcn_pathbyaddr(void *addr,char *path,int sz)
 	{
@@ -467,7 +467,6 @@ static int dlfcn_pathbyaddr(void *addr,char *path,int sz)
 #endif
 	return -1;
 	}
-#endif /* __sgi */
 
 static void *dlfcn_globallookup(const char *name)
 	{

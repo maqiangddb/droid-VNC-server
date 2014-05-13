@@ -67,8 +67,10 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(common_SRC_FILES)
 LOCAL_CFLAGS += $(common_CFLAGS)
-LOCAL_C_INCLUDES += $(common_C_INCLUDES)
+#LOCAL_C_INCLUDES += $(common_C_INCLUDES)
 #	external/zlib
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/../zlib
 LOCAL_SHARED_LIBRARIES := \
 	libz
 
